@@ -1,0 +1,81 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-10 col">
+                <h4 class="modal-title">
+                    {{'MANAGE_ACTION' | translate}}
+                </h4>
+            </div>
+            <div class="col-sm-auto col-auto ml-auto">
+                <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="actionForm">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>{{'PAGE' | translate}}</label>
+                        <div class="input-group">
+                            <input formControlName="pagename"  type="text" class="form-control"
+                                id="actionName">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="text-danger" for="actionName">{{'NAME' | translate}} *</label>
+                        <input formControlName="name" type="text" class="form-control" id="actionName">
+                        <div *ngIf="actionForm.get('name').touched && actionForm.get('name').errors">
+                            <div class="text-danger"
+                                *ngIf="actionForm.get('name').touched && actionForm.get('name').errors?.required">
+                                {{'ACTION_NAME_IS_REQUIRED ' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="text-danger" for="order">{{'ORDER_NUMBER' | translate}} *</label>
+                        <input formControlName="order" type="number" class="form-control" id="order">
+                        <div *ngIf="actionForm.get('order').touched && actionForm.get('order').errors">
+                            <div class="text-danger"
+                                *ngIf="actionForm.get('order').touched && actionForm.get('order').errors?.required">
+                                {{'ORDER_IS_REQUIRED' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-row w-100 justify-content-end">
+                <div class="col-md-auto col-auto">
+                    <ng-container *ngIf="!isEdit">
+                        <button class="btn btn-success btn-sm m-right-10" (click)="saveAction()" cdkFocusInitial>
+                            <i class="fas fa-save"></i>
+                            {{"SAVE" | translate}}
+                        </button>
+                    </ng-container>
+                    <ng-container *ngIf="isEdit">
+                        <button class="btn btn-success btn-sm m-right-10" (click)="saveAction()" cdkFocusInitial><i
+                                class="fas fa-save"></i>
+                            {{"SAVE" | translate}}
+                        </button>
+                    </ng-container>
+                    <button class="btn btn-danger btn-sm" (click)="onCancel()">
+                        <i class="fas fa-times-circle"></i>
+                        {{"CANCEL" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

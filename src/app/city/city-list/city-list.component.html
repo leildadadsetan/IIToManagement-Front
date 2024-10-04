@@ -1,0 +1,85 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+            <h1> {{"CITIES" | translate}} </h1>
+            </div>
+        </div>
+        <div *hasClaim="'SETT_MANAGE_CITY'" class="col-md-auto col-sm-auto col-auto">
+            <button class="btn blue-btn btn-sm m-right-10"  (click)="manageCity({})">
+                <i class="fas fa-plus"></i> {{"ADD_CITY" | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" [dir]="langDir" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
+        matSortActive="cityName">
+        <ng-container matColumnDef="action" sticky>
+            <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{"ACTION" | translate}} </th>
+            <td class="table-column-200" mat-cell *matCellDef="let element">
+                <button *hasClaim="'SETT_MANAGE_CITY'" (click)="manageCity(element)" class="btn btn-success btn-sm m-right-10" type="button">
+                    <i class="fas fa-pencil-alt"></i>
+                    <span class="d-none d-sm-inline"> {{"EDIT" | translate}}</span>
+                </button>
+                <button *hasClaim="'SETT_MANAGE_CITY'" (click)="deleteCity(element)" class="btn btn-danger btn-sm" type="button">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="d-none d-sm-inline"> {{"DELETE" | translate}}</span>
+                </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="cityName" sticky>
+            <th class="table-column-300" mat-header-cell *matHeaderCellDef mat-sort-header> {{'CITY' | translate}} </th>
+            <td class="table-column-300" mat-cell *matCellDef="let city"> {{city.cityName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="countryName">
+            <th class="table-column-150" mat-header-cell mat-sort-header *matHeaderCellDef> {{'COUNTRY' | translate}}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let city"> {{city.countryName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action-search" sticky>
+            <th class="pr-5" mat-header-cell *matHeaderCellDef> </th>
+        </ng-container>
+        <ng-container matColumnDef="cityName-search" sticky>
+            <th mat-header-cell *matHeaderCellDef>
+                <input placeholder="{{'CITY' | translate}}" type="text" class="form-control" [(ngModel)]="NameFilter">
+            </th>
+        </ng-container>
+        <ng-container matColumnDef="country-search">
+            <th mat-header-cell *matHeaderCellDef>
+                <input type="text" placeholder="{{'COUNTRY' | translate}}" class="form-control" [formControl]="countryControl" [matAutocomplete]="auto">
+                <mat-autocomplete [dir]="langDir"  [autoActiveFirstOption]="true" (optionSelected)='CountryFilter = $event.option.value'
+                    #auto="matAutocomplete">
+                    <mat-option value="">{{'NONE' | translate}}</mat-option>
+                    <mat-option *ngFor="let cont of filteredCountryList | async" [value]="cont.countryName">
+                        {{cont.countryName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </th>
+        </ng-container>
+        <ng-container matColumnDef="footer">
+            <td mat-footer-cell colspan="8" *matFooterCellDef >
+                <mat-paginator [length]="cityResource.totalCount" [pageSize]="cityResource.pageSize"
+                    [pageSizeOptions]="[10, 20, 30]">
+                </mat-paginator>
+            </td>
+        </ng-container>
+        <tr *matNoDataRow>
+          <td colspan="9">
+              <span class="p-4 mt-4">
+                  <b> {{'NO_DATA_FOUND' | translate}}</b>
+              </span>
+          </td>
+      </tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="['action-search','cityName-search','country-search'];sticky: true"
+            class="example-second-header-row">
+        </tr>
+        <tr mat-footer-row *matFooterRowDef="columnsToDisplay;sticky: true"></tr>
+    </table>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+    <mat-spinner></mat-spinner>
+</div>

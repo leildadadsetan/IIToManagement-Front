@@ -1,0 +1,3 @@
+<app-product-category-list-presentation [productCategories]="productCategories$ | async"
+  (addEditCategoryHandler)="manageCategory($event)" (deleteProductCategoryHandler)="deleteProductCategory($event)">
+</app-product-category-list-presentation>

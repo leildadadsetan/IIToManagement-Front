@@ -1,0 +1,93 @@
+<div class="modal-content1">
+  <div class="modal-header">
+    <div class="d-flex w-100 align-items-center justify-content-between">
+      <div class="col-md-9 col">
+        <h4 class="modal-title">
+          {{"MANAGE_WAREHOUSE" | translate}}
+        </h4>
+      </div>
+      <div class="col-sm-auto col-auto ml-auto">
+        <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="warehouseForm">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="text-danger" for="warehouseName">{{"WAREHOUSE_NAME" | translate}} *</label>
+                <input formControlName="name" type="text" class="form-control" id="warehouseName">
+                <div *ngIf="warehouseForm.get('name').touched && warehouseForm.get('name').errors">
+                  <div class="text-danger"
+                    *ngIf="warehouseForm.get('name').touched && warehouseForm.get('name').errors?.required">
+                    {{"NAME_IS_REQUIRED" | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h6>{{"CONTACT_INFORMATION" | translate}}</h6>
+          <div class="container border">
+            <div class="col-md-12 mt-2">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>{{"CONTACT_PERSON" | translate}}</label>
+                    <input formControlName="contactPerson" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>{{"MOBILE_NUMBER" | translate}}</label>
+                    <input formControlName="mobileNumber" type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>{{"EMAIL" | translate}} </label>
+                <input formControlName="email" type="text" class="form-control" id="warehouseEmail">
+                <div *ngIf="warehouseForm.get('email').touched && warehouseForm.get('email').errors">
+                  <div *ngIf="warehouseForm.get('email').touched && warehouseForm.get('email').errors?.email"
+                    class="text-danger">{{"PLEASE_ENTER_VALID_EMAIL" | translate}}.
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label> {{"ADDRESS" | translate}}</label>
+                    <textarea formControlName="address" class="form-control"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="form-row w-100">
+        <div class="col-md-auto col-auto">
+          <button *hasClaim="'PRO_MANAGE_WAREHOUSE'" class="btn btn-success btn-sm m-right-10" (click)="saveWarehouse()"
+            cdkFocusInitial><i class="fas fa-save"></i>
+            {{"SAVE" | translate}}
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="onCancel()">
+            <i class="fas fa-times-circle"></i>
+            {{"CANCEL" | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="loading-shade" *ngIf="isLoading">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>

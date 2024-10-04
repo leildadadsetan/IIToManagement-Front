@@ -1,0 +1,104 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+                <h1>{{'USERS' | translate}}</h1>
+            </div>
+        </div>
+        <div class="col-md-auto col-sm-auto col-auto">
+            <button *hasClaim="'USR_ADD_USER'" class="btn blue-btn btn-sm m-right-10" [routerLink]="['/users/manage']">
+                <i class="fas fa-plus"></i> {{'ADD_USER' | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <div class="loading-shade" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="col-sm-6 mb-3">
+        <input class="form-control" placeholder="{{'SEARCH_BY_EMAIL_FIRST_NAME_LAST_NAME_PHONE_NUMBER' | translate}}"
+            #input>
+    </div>
+    <table mat-table [dir]="langDir" class="table table-bordered table-hover" [dataSource]="dataSource" matSort
+        matSortActive="email">
+        <ng-container matColumnDef="action">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+                <span> {{'ACTION' | translate}} </span>
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let user">
+                <button *hasClaim="['USR_UPDATE_USER','USR_ASSIGN_USR_PERMISSIONS','USR_RESET_PWD','USR_DELETE_USER']"
+                    mat-icon-button [matMenuTriggerFor]="menu" aria-label="Action">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" [dir]="langDir">
+                    <button *hasClaim="'USR_UPDATE_USER'" (click)="editUser(user.id)" mat-menu-item>
+                        <mat-icon>edit</mat-icon>
+                        <span>{{'EDIT' | translate}}</span>
+                    </button>
+                    <button *hasClaim="'USR_ASSIGN_USR_PERMISSIONS'" mat-menu-item (click)="userPermission(user.id)">
+                        <mat-icon>admin_panel_settings</mat-icon>
+                        <span>{{'PERMISSION' | translate}}</span>
+                    </button>
+                    <button *hasClaim="'USR_RESET_PWD'" mat-menu-item (click)="resetPassword(user)">
+                        <mat-icon>vpn_key</mat-icon>
+                        <span>{{'RESET_PASSWORD' | translate}}</span>
+                    </button>
+                    <button *hasClaim="'USR_DELETE_USER'" mat-menu-item (click)="deleteUser(user)">
+                        <mat-icon>delete</mat-icon>
+                        <span>{{'DELETE' | translate}}</span>
+                    </button>
+                </mat-menu>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="email">
+            <th class="table-column-300" mat-header-cell *matHeaderCellDef mat-sort-header> {{'EMAIL' | translate}}
+            </th>
+            <td class="table-column-300" mat-cell *matCellDef="let user">
+                <ng-container *ngIf="user.email">
+                    <a href="mailto:{{user.email}}">{{user.email}}</a>
+                </ng-container>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="firstName">
+            <th class="table-column-200" mat-header-cell *matHeaderCellDef mat-sort-header> {{'FIRST_NAME' | translate}}
+            </th>
+            <td class="table-column-200" mat-cell *matCellDef="let user"> {{user.firstName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="lastName">
+            <th class="table-column-175" mat-header-cell *matHeaderCellDef mat-sort-header> {{'LAST_NAME' | translate}}
+            </th>
+            <td class="table-column-175" mat-cell *matCellDef="let user"> {{user.lastName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="phoneNumber">
+            <th class="table-column-200" mat-header-cell *matHeaderCellDef mat-sort-header> {{'PHONE_NUMBER' |
+                translate}} </th>
+            <td class="table-column-200" mat-cell *matCellDef="let user"> {{user.phoneNumber}} </td>
+        </ng-container>
+        <ng-container matColumnDef="isActive">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'STATUS' | translate}}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let user">
+                <span *ngIf="user.isActive" class="badge badge-success">{{'ACTIVE' | translate}}</span>
+                <span *ngIf="!user.isActive" class="badge badge-warning">{{'INACTIVE' | translate}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="footer">
+            <td mat-footer-cell colspan="6" *matFooterCellDef>
+                <mat-paginator  [dir]="langDir" [length]="userResource.totalCount" [pageSize]="userResource.pageSize"
+                    [pageSizeOptions]="[10, 20, 30]">
+                </mat-paginator>
+            </td>
+        </ng-container>
+        <tr *matNoDataRow>
+            <td colspan="9">
+                <span class="p-4 mt-4">
+                    <b> {{'NO_DATA_FOUND' | translate}}</b>
+                </span>
+            </td>
+        </tr>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr mat-footer-row *matFooterRowDef="footerToDisplayed"></tr>
+    </table>
+</div>

@@ -1,0 +1,59 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1> {{'EMAIL_SMTP_SETTING' | translate }}</h1>
+      </div>
+    </div>
+    <div class="col-md-auto col-sm-auto">
+      <button *hasClaim="'EMAIL_MANAGE_EMAIL_SMTP_SETTINS'" [routerLink]="['/email-smtp/manage']"
+        class="btn blue-btn btn-sm m-right-10">
+        <i class="fas fa-plus"></i>
+        {{'ADD_SMTP_SETTING' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table [dir]="langDir" mat-table [dataSource]="emailSMTPSettings" class="table table-bordered table-hover grid-height">
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <th class="table-column-300" mat-header-cell *matHeaderCellDef>{{'ACTION' | translate}} </th>
+      <td class="table-column-300" mat-cell *matCellDef="let emailSMTPSetting">
+        <button *hasClaim="'EMAIL_MANAGE_EMAIL_SMTP_SETTINS'" [routerLink]="['/email-smtp/manage', emailSMTPSetting.id]"
+          class="btn btn-success btn-sm m-right-10" type="button">
+          <i class="fas fa-pencil-alt"></i>
+          <span class="d-none d-sm-inline"> {{'EDIT' | translate }}</span>
+        </button>
+        <button *hasClaim="'EMAIL_MANAGE_EMAIL_SMTP_SETTINS'" class="btn btn-danger btn-sm" type="button"
+          (click)="deleteEmailSMTPSetting(emailSMTPSetting)">
+          <i class="fas fa-trash-alt"></i>
+          <span class="d-none d-sm-inline"> {{'DELETE' | translate }}</span>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="host">
+      <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{'HOST' | translate }} </th>
+      <td class="table-column-200" mat-cell *matCellDef="let emailSMTPSetting"> {{emailSMTPSetting.host}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="userName">
+      <th class="table-column-300" mat-header-cell *matHeaderCellDef> {{'USER_NAME' | translate }}</th>
+      <td class="table-column-300" mat-cell *matCellDef="let emailSMTPSetting"> {{emailSMTPSetting.userName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="port">
+      <th class="table-column-100" mat-header-cell *matHeaderCellDef> {{'PORT' | translate }} </th>
+      <td class="table-column-100" mat-cell *matCellDef="let emailSMTPSetting"> {{emailSMTPSetting.port}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isDefault">
+      <th class="table-column-100" mat-header-cell *matHeaderCellDef> {{'IS_DEFAULT' | translate }} </th>
+      <td class="table-column-100" mat-cell *matCellDef="let emailSMTPSetting"> {{emailSMTPSetting.isDefault ? "Yes" :
+        "No"}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

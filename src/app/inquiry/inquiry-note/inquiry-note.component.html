@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        {{'NOTES' | translate}}
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="list-group">
+              <div *ngFor="let inquiryNote of inquiryNotes" class="list-group-item list-group-item-action"
+                aria-current="true">
+                <p class="mb-1">
+                  {{inquiryNote.note}}
+                  <span role="button" class="badge" (click)="onDelete(inquiryNote.id)">
+                    <i class="fas text-danger fa-trash"></i>
+                  </span>
+                </p>
+                <div class="w-100">
+                  <small class="mr-2">
+                    {{inquiryNote.createdDate| utcToLocalTime:'shortDate'}}
+                  </small>
+                  <small class="text-primary">{{inquiryNote?.createdByUser.firstName}}
+                    {{inquiryNote?.createdByUser.lastName}}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <form [formGroup]="commentForm" class="mt-3">
+              <div class="form-group">
+                <textarea class="form-control" formControlName="note" rows="3"></textarea>
+                <div *ngIf="commentForm.get('note').touched && commentForm.get('note').errors">
+                  <div class="text-danger" *ngIf="commentForm.get('note').errors?.required">
+                    {{'NOTE_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn blue-btn btn-sm" (click)="addComment()">
+                {{'ADD_NOTE' | translate}}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

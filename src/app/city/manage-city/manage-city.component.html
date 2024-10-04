@@ -1,0 +1,66 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-9 col">
+                <h4 class="modal-title">
+                    {{"MANAGE_CITY" | translate}}
+                </h4>
+            </div>
+            <div class="col-sm-auto col-auto ml-auto">
+                <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="cityForm">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <mat-label class="text-danger"> {{'COUNTRY' | translate}} *</mat-label>
+                        <mat-select [dir]="langDir" placeholder="{{'COUNTRY' | translate}}" class="form-control"
+                            formControlName="countryId">
+                            <mat-option *ngFor="let country of countryList" [value]="country.id">
+                                {{country.countryName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error [dir]="langDir"
+                            *ngIf="cityForm.get('countryId').touched && cityForm.get('countryId').errors?.required"
+                            class="text-danger">
+                            {{'PLEASE_SELECT_COUNTRY' | translate}}
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="cityName" class="text-danger">{{'CITY_NAME' | translate}} *</label>
+                        <input formControlName="cityName" type="text" class="form-control" id="cityName">
+                        <div *ngIf="cityForm.get('cityName').touched && cityForm.get('cityName').errors">
+                            <div class="text-danger"
+                                *ngIf="cityForm.get('cityName').touched && cityForm.get('cityName').errors?.required">
+                                {{'CITY_NAME_IS_REQUIRED.' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-row w-100">
+                <div class="col-md-auto col-auto">
+                    <button *hasClaim="'SETT_MANAGE_CITY'" class="btn btn-success btn-sm m-right-10" (click)="saveCity()" cdkFocusInitial>
+                        <i class="fas fa-save"></i>
+                        {{"SAVE" | translate}}
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="onCancel()">
+                        <i class="fas fa-times-circle"></i>
+                        {{"CANCEL" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,152 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+                <h1>{{'PROFIT_VS_LOSS_REPORT' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 mb-3">
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="fromDate">{{'FROM_DATE' | translate}} </label>
+                        <input class="form-control" id="fromDate" [max]="currentDate" formControlName="fromDate"
+                            [owlDateTimeTrigger]="fromDate" [owlDateTime]="fromDate"
+                            placeholder="{{'FROM_DATE' | translate}}">
+                        <owl-date-time [pickerType]="'calendar'" #fromDate></owl-date-time>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="toDate">{{'TO_DATE' | translate}} </label>
+                        <input class="form-control" id="toDate" [max]="currentDate" formControlName="toDate"
+                            [owlDateTimeTrigger]="toDate" [owlDateTime]="toDate"
+                            placeholder="{{'TO_DATE' | translate}}">
+                        <owl-date-time [pickerType]="'calendar'" #toDate></owl-date-time>
+                    </div>
+                </div>
+
+                <div class="col-md-4 report-tool-bar">
+                    <button type="submit" (click)="onSearch()" class="btn btn-primary btn-sm m-right-10"><i
+                            class="fas fa-save"></i> {{'SEARCH' |
+                        translate}}
+                    </button>
+                    <button type="submit" (click)="onClear()" class="btn btn-danger btn-sm m-right-10"><i
+                            class="fas fa-eraser"></i> {{'CLEAR' |
+                        translate}}
+                    </button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div *ngIf="searchForm.errors">
+                        <div class="text-danger" *ngIf="searchForm.errors?.dateRange">
+                            {{'DATE_RANGE_VALIDATION_MSG' | translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-bordered table-hover " id="report-data">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" class="text-bold  text-primary"><span class="header">{{'PURCHASE' | translate}}</span>
+                                <div class="float-right"><button type="submit" (click)="onDownloadReport()"
+                                        class="btn btn-warning btn-sm"><i class="fas fa-download"></i>
+                                        {{'DOWNLOAD_REPORT' | translate}}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{'TOTAL_PURCHASE' | translate}}({{purchaseOrderProfitLoss?.totalItem}})</td>
+                            <td class="text-right pur_total">{{purchaseOrderProfitLoss?.total -
+                                purchaseOrderProfitLoss?.totalTax + purchaseOrderProfitLoss?.totalDiscount}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'TOTAL_PURCHASE_TAX' | translate}}</td>
+                            <td class="text-right">{{purchaseOrderProfitLoss?.totalTax}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'TOTAL_DISCOUNT_ON_PURCHASE' | translate}}</td>
+                            <td class="text-right">{{purchaseOrderProfitLoss?.totalDiscount}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{'PAID_PAYMENT' | translate}}</td>
+                            <td class="text-right text-success">
+                                {{purchaseOrderProfitLoss?.paidPayment}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'PURCHASE_DUE' | translate}}</td>
+                            <td class="text-right text-danger">{{purchaseOrderProfitLoss?.total -
+                                purchaseOrderProfitLoss?.paidPayment}}</td>
+                        </tr>
+                        <tr class="profite">
+                            <td class="text-bold">{{'GROSS_TOTAL' | translate}}</td>
+                            <td class="text-right  text-primary">{{purchaseOrderProfitLoss?.total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-body table-responsive">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" class="text-bold text-primary"><span class="header">{{'SALES' | translate}}</span>
+                                <div class="float-right"><button type="submit" (click)="onSaleDownloadReport()"
+                                    class="btn btn-warning btn-sm"><i class="fas fa-download"></i>
+                                    {{'DOWNLOAD_REPORT' | translate}}
+                                </button>
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> {{'TOTAL_SALES' | translate}}({{saleOrderProfitLoss?.totalItem}})</td>
+                            <td class="text-right">{{saleOrderProfitLoss?.total -
+                                saleOrderProfitLoss?.totalTax + saleOrderProfitLoss?.totalDiscount}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'TOTAL_SALES_TAX' | translate}}</td>
+                            <td class="text-right">{{saleOrderProfitLoss?.totalTax}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'TOTAL_DISCOUNT_ON_SALES' | translate}}</td>
+                            <td class="text-right">{{saleOrderProfitLoss?.totalDiscount}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{'PAID_PAYMENT' | translate}}</td>
+                            <td class="text-right text-success ">
+                                {{saleOrderProfitLoss?.paidPayment}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'SALES_DUE' | translate}}</td>
+                            <td class="text-right text-danger">{{saleOrderProfitLoss?.total -
+                                saleOrderProfitLoss?.paidPayment}}</td>
+                        </tr>
+                        <tr class="profite">
+                            <td class="text-bold">{{'GROSS_TOTAL' | translate}}</td>
+                            <td class="text-right  text-primary">{{saleOrderProfitLoss?.total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'PRODUCT_WAREHOUSE_REPORT' | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="loading-shade" *ngIf="waehouseList.length == 0">
+  <mat-spinner></mat-spinner>
+</div> -->
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-responsive">
+      <table [dir]="langDir" mat-table [dataSource]="waehouseList" multiTemplateDataRows
+        class="table table-bordered table-hover grid-height" matSort>
+        <ng-container matColumnDef="action">
+          <th class="table-column-100" mat-header-cell *matHeaderCellDef>
+          </th>
+          <td class="table-column-100" mat-cell *matCellDef="let so">
+            <button mat-icon-button (click)="toggleRow(so)">
+              <mat-icon *ngIf="so != expandedElement">chevron_right</mat-icon>
+              <mat-icon *ngIf="so == expandedElement">expand_more</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th class="table-column-300" mat-header-cell  *matHeaderCellDef> {{'NAME' | translate}} </th>
+          <td class="table-column-300" mat-cell *matCellDef="let so">
+            {{so.name}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="stock">
+          <th class="table-column-300" mat-header-cell *matHeaderCellDef> {{'STOCK' |
+            translate}} </th>
+          <td class="table-column-300" mat-cell *matCellDef="let so">
+            {{so.stock}} &nbsp;{{so.unitCode}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let soObject" [attr.colspan]="displayedColumns.length">
+            <ng-container *ngIf="soObject == expandedElement">
+              <div class="example-element-detail"
+                [@detailExpand]="soObject == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="inner-table mat-elevation-z8">
+                  <app-product-warehouse-item [warehouse]="soObject">
+                  </app-product-warehouse-item>
+                </div>
+              </div>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr *matNoDataRow>
+          <td colspan="9">
+            <span class="p-4 mt-4">
+              <b> {{'NO_DATA_FOUND' | translate}}</b>
+            </span>
+          </td>
+        </tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.bg-warning1]="row.status===1"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </div>
+  </div>
+</div>

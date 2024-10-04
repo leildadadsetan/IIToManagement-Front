@@ -1,0 +1,88 @@
+<div class="page-header-main mt-2">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'COMPANY_PROFILE' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<form [formGroup]="companyProfileForm" (ngSubmit)="saveCompanyProfile()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>{{'TITLE' | translate}}</label>
+                        <input formControlName="title" class="form-control w-100" type="text">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-danger">{{'CURRENCY' | translate}} *</label>
+                    <mat-select [dir]="langDir" placeholder="{{'CURRENCY' | translate}}" class="form-control" formControlName="currencyCode">
+                        <mat-option *ngFor="let currency of currencies" [value]="currency.symbol">
+                            {{currency.name}} ({{currency.symbol}})
+                        </mat-option>
+                    </mat-select>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>{{'ADDRESS' | translate}}</label>
+                        <textarea cols="30" rows="3" class="form-control w-100" formControlName="address"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{'PHONE_NUMBER' | translate}}</label>
+                                <input formControlName="phone" class="form-control w-100" type="text">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{'EMAIL' | translate}}</label>
+                                <input formControlName="email" class="form-control w-100" type="text">
+                                <div
+                                    *ngIf="companyProfileForm.get('email').touched && companyProfileForm.get('email').errors">
+                                    <div class="text-danger" *ngIf="companyProfileForm.get('email').errors?.email">
+                                        {{'PLEASE_ENTER_VALID_EMAIL' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row text-center">
+                <div class="col-md-9 mt-2 ml-5">
+                    <mat-card class="cus-mat-card" [dir]="langDir">
+                        <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file"
+                            name="Profile Photo" fxFlex="30">
+                        <img *ngIf="imgSrc" class="full-width" [src]="imgSrc" />
+                        <img *ngIf="!imgSrc" class="full-width" src="../../assets/images/logo.png" />
+                        <mat-card-actions>
+                            <button type="button" class="btn btn-success btn-sm mb-2" (click)="fileInput.click()">
+                                <i class="far fa-image"></i> {{'CHANGE_LOGO' | translate}}</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button *hasClaim="'SETT_UPDATE_COM_PROFILE'" type="submit" class="btn btn-success btn-sm mr-2">
+                <i class="fas fa-save"></i> {{'SAVE' | translate}}
+            </button>
+            <button [routerLink]="['/dashboard']" type="button" class="btn btn-danger btn-sm">
+                <i class="fas fa-times-circle"></i> {{'CANCEL' | translate}}
+            </button>
+        </div>
+    </div>
+</form>
+<div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>

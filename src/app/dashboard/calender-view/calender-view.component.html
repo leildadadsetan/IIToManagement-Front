@@ -1,0 +1,38 @@
+<div class="page-header-main mt-2">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'REMINDERS' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row text-center">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="col-md-4">
+        <div class="btn-group">
+            <div class="btn blue-btn" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="viewDateChange($event)">
+                {{'PREVIOUS' | translate}}
+            </div>
+            <div class="btn btn-outline-secondary" (viewDateChange)="viewDateChange($event)" mwlCalendarToday
+                [(viewDate)]="viewDate">
+                {{'TODAY' | translate}}
+            </div>
+            <div class="btn blue-btn" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="viewDateChange($event)">
+                {{'NEXT' | translate}}
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+        [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+        (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+</div>

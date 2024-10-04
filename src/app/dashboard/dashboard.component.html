@@ -1,0 +1,23 @@
+<div class="page-header-main mt-2">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'DASHBOARD' | translate }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-statistics *hasClaim="'DB_STATISTICS'"></app-statistics>
+<app-best-selling-product *hasClaim="'DB_BEST_SELLING_PROS'"></app-best-selling-product>
+<app-calender-view *hasClaim="'DB_REMINDERS'"></app-calender-view>
+<app-latest-inquiry *hasClaim="'DB_LATEST_INQUIRIES'"></app-latest-inquiry>
+
+<div class="row">
+  <div class="col-md-6">
+    <app-sales-order-expected-shipment *hasClaim="'DB_RECENT_SO_SHIPMENT'"></app-sales-order-expected-shipment>
+  </div>
+  <div class="col-md-6">
+    <app-purchase-order-expected-delivery *hasClaim="'DB_RECENT_PO_DELIVERY'"></app-purchase-order-expected-delivery>
+  </div>
+</div>

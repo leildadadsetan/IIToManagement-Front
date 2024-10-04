@@ -1,0 +1,49 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'ROLE_USER' | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <mat-label [dir]="langDir">{{'SELECT_ROLE' | translate}}</mat-label>
+      <mat-select [dir]="langDir" class="form-control" name="selectedRole" [(ngModel)]="selectedRoleId" (selectionChange)="onRoleChange()">
+        <mat-option *ngFor="let role of roles" [value]="role.id">
+          {{role.name}}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span class="font-weight-bold text-danger">
+      {{'NOTE_IN_ORDER_TO_ADD_USER_TO_ROLE_PLEASE_DRAG_IT_FROM_ALL_USERS_TO_ROLE_USERS' | translate}}
+    </span>
+  </div>
+</div>
+
+<div *ngIf="selectedRole" class="row">
+  <div class="col-sm-5">
+    <h5 class="text-primary">{{'ALL_USERS' | translate}}</h5>
+    <div cdkDropList #doneList="cdkDropList" cdkDropListLockAxis="true" [cdkDropListData]="otherUsers"
+      [cdkDropListConnectedTo]="[todoList]" class="example-list" (cdkDropListDropped)="removeUser($event)">
+      <div class="example-box" *ngFor="let item of otherUsers" cdkDrag>
+        <span>{{item.firstName}} {{item.lastName}} ({{item.userName}}) </span>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5">
+    <h5 class="text-primary">{{'ROLE_USERS' | translate}}</h5>
+    <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="roleUsers" [cdkDropListConnectedTo]="[doneList]"
+      class="example-list" (cdkDropListDropped)="addUser($event)">
+      <div class="example-box" *ngFor="let item of roleUsers" cdkDrag>
+        <span>{{item.firstName}} {{item.lastName}} ({{item.userName}})</span>
+      </div>
+    </div>
+  </div>
+</div>

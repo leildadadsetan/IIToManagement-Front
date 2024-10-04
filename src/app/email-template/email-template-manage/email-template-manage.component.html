@@ -1,0 +1,72 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1 *ngIf="!emailTemplate">
+          {{'ADD_EMAIL_TEMPLATE' | translate }}
+        </h1>
+        <h1 *ngIf="emailTemplate">
+          {{'EDIT_EMAIL_TEMPLATE' | translate }}
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+<form [formGroup]="emailTemplateForm">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group ">
+        <label class="text-danger"> {{'NAME' | translate }} *</label>
+        <input formControlName="name" class="form-control" type="text">
+        <div *ngIf="emailTemplateForm.get('name').dirty && emailTemplateForm.get('name').errors">
+          <div class="text-danger" *ngIf="emailTemplateForm.get('name').errors?.required">
+            {{'EMAIL_TEMPLATE_NAME_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group ">
+        <label class="text-danger">{{'SUBJECT' | translate }} *</label>
+        <input formControlName="subject" class="form-control" type="text">
+        <div *ngIf="emailTemplateForm.get('subject').dirty && emailTemplateForm.get('subject').errors">
+          <div class="text-danger" *ngIf="emailTemplateForm.get('subject').errors?.required">
+            {{'SUBJECT_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group ">
+        <label class="text-danger">
+          {{'BODY' | translate }} *
+          <span class="text-danger">
+            {{'WORD_MUST_BE_START_AND_END_WITH' | translate }}
+          </span>
+        </label>
+        <angular-editor formControlName="body" [config]="editorConfig"></angular-editor>
+        <div *ngIf="emailTemplateForm.get('body').dirty && emailTemplateForm.get('body').errors">
+          <div class="text-danger" *ngIf="emailTemplateForm.get('body').errors?.required">
+            {{'BODY_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="mt-2 col-md-12">
+      <button *hasClaim="'EMAIL_MANAGE_EMAIL_TEMPLATES'" class="btn btn-success btn-sm m-right-10"
+        (click)="addUpdateEmailTemplate()" cdkFocusInitial><i class="las la-save"></i>
+        {{'SAVE' | translate }}
+      </button>
+      <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/emailtemplate']">
+        <i class="las la-times-circle"></i>
+        {{'CANCEL' | translate }}
+      </button>
+    </div>
+  </div>
+</form>

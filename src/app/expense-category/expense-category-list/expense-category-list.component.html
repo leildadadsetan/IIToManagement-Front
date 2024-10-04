@@ -1,0 +1,3 @@
+<app-expense-category-list-presentation [expenseCategories]="expenseCategories$ | async" [loading]="loading$ | async"
+  (deleteExpenseCategoryHandler)="deleteExpenseCategory($event)">
+</app-expense-category-list-presentation>

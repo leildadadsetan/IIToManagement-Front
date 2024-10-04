@@ -1,0 +1,226 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'SALES_ORDER' | translate}}#{{salesOrder?.orderNumber}}</h1>
+            </div>
+        </div>
+        <div class="col-md-auto col-sm-auto">
+            <button *hasClaim="'SO_GENERATE_INVOICE'" class="btn blue-btn btn-sm m-right-10"
+                (click)="generateInvoice()">
+                <i class="fas fa-receipt"></i> {{'GENERATE_INVOICE' | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+<br>
+<ng-container *ngIf="salesOrder">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <h5 class="">{{"CUSTOMER_ADDRESS" | translate}}</h5>
+                <b> {{salesOrder?.customer?.customerName}}</b><br>
+                {{salesOrder?.customer?.address}}<br><br>{{"PHONE"| translate}}:
+                {{salesOrder?.customer?.mobileNo}}<br>{{"EMAIL"| translate}}:
+                <ng-container *ngIf="salesOrder?.customer?.email">
+                    <a href="mailto:{{salesOrder?.customer?.email}}">{{salesOrder?.customer?.email}}</a>
+                </ng-container>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <h5 class="">{{"COMPANY_PROFILE" | translate}}</h5>
+                <b> {{companyProfile.title}}</b><br>
+                {{companyProfile.address}}<br><br>{{"PHONE"| translate}}:
+                {{companyProfile.phone}}<br>{{"EMAIL" | translate}}:
+                <ng-container *ngIf="companyProfile.email">
+                    <a href="mailto:{{companyProfile.email}}">{{companyProfile.email}}</a>
+                </ng-container>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <h5 class="">{{'REFERENCE' | translate}}</h5>
+                <b> {{salesOrder?.orderNumber}}</b><br>
+                <b>{{"DATE" | translate}} : </b>{{salesOrder?.soCreatedDate | utcToLocalTime:'shortDate'}}
+                <br><b>{{"PAYMENT_STATUS" | translate}} : </b>
+                <span class="badge-pill" [ngClass]="{'badge-success': salesOrder?.paymentStatus == 0 ,
+                'badge-danger' : salesOrder?.paymentStatus == 1,
+                'badge-warning' : salesOrder?.paymentStatus == 2}">
+                    {{salesOrder?.paymentStatus | paymentStatus }}</span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <div class="page-header-main">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-md-auto col-sm-auto">
+                <div class="content-header">
+                    <h1>{{"SALES_ORDER_ITEMS" | translate}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped table-sm">
+            <thead class="head">
+                <tr>
+                    <th style="width:1%">{{"NO." | translate}}</th>
+                    <th style="width:20%">{{"DESCRIPTION" | translate}}</th>
+                    <th style="width:3%">{{"UNIT_PRICE" | translate}}</th>
+                    <th style="width:2%">{{"QUANTITY" | translate}}</th>
+                    <th style="width:3%">{{"DISCOUNT" | translate}}</th>
+                    <th style="width:5%">{{"TAX" | translate}}</th>
+                    <th style="width:10%">{{"TOTAL_AMOUNT" | translate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let salesItem of salesOrderItems;let i=index">
+                    <ng-container *ngIf="salesItem.status == 0">
+                        <td style="text-align: center;">{{i+1}}</td>
+                        <td>{{salesItem.productName}}</td>
+                        <td class="text-right">{{salesItem.unitPrice | customCurrency}}</td>
+                        <td class="text-right">{{salesItem.quantity}} <span
+                                style="font-size: 10px;">({{salesItem?.unitConversation?.name}})</span></td>
+                        <td class="text-right">{{salesItem.discount | customCurrency}}</td>
+                        <td class="text-right">{{salesItem.taxValue | customCurrency}}<br>
+                            <span style="font-size: 10px;"
+                                *ngFor="let tax of salesItem.salesOrderItemTaxes;let last=last">
+                                {{tax.taxName}}({{tax.taxPercentage}}%) <span *ngIf="!last">, </span>
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            {{(salesItem?.quantity * salesItem?.unitPrice) - salesItem.discount +
+                            salesItem.taxValue | customCurrency }}
+                        </td>
+                    </ng-container>
+                </tr>
+                <tr class="bg-warning1" *ngIf="salesOrderReturnsItems?.length > 0">
+                    <td colspan="100%" class="no-border"><strong>Returned Items</strong></td>
+                </tr>
+                <tr class="bg-warning1" *ngFor="let salesItem of salesOrderReturnsItems;let i=index">
+                    <td style="text-align: center;">{{i+1}}</td>
+                    <td>{{salesItem.productName}}</td>
+                    <td class="text-right">{{salesItem.unitPrice | customCurrency}}</td>
+                    <td class="text-right">{{ -1 *salesItem.quantity}}<br> <span
+                            style="font-size: 10px;">({{salesItem?.unitConversation?.name}})</span></td>
+                    <td class="text-right">{{ -1 *salesItem.discount | customCurrency}}</td>
+                    <td class="text-right">{{  -1 *salesItem.taxValue | customCurrency}}<br>
+                        <span style="font-size: 10px;" *ngFor="let tax of salesItem.salesOrderItemTaxes;let last=last">
+                            {{tax.taxName}}({{tax.taxPercentage}}%) <span *ngIf="!last">, </span>
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        {{ -1 *((salesItem?.quantity * salesItem?.unitPrice) - salesItem.discount +
+                        salesItem.taxValue) | customCurrency }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-right total">{{"TOTAL" | translate}}</td>
+                    <!-- <td class="text-right total">{{salesOrder.totalQuantity}}</td> -->
+                    <td class="text-right total">{{salesOrder.totalDiscount | customCurrency}}</td>
+                    <td class="text-right total">{{salesOrder.totalTax | customCurrency}}</td>
+                    <td class="total">{{salesOrder.totalAmount | customCurrency}}</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-right total">{{"PAID" | translate}}</td>
+                    <td class="total">{{salesOrder.totalPaidAmount | customCurrency}} </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-right total">{{"BALANCE" | translate}}</td>
+                    <td class="total">{{salesOrder.totalAmount-salesOrder.totalPaidAmount | customCurrency}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="salesOrder.salesOrderPayments.length > 0">
+        <div class="page-header-main">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-auto col-sm-auto">
+                    <div class="content-header">
+                        <h1>{{"SALES_ORDER_PAYMENTS" | translate}}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped table-sm" style="width: 50%;">
+                <thead class="head">
+                    <tr>
+                        <th>{{"PAYMENT_DATE" | translate}}</th>
+                        <th>{{'AMOUNT' | translate}}</th>
+                        <th>{{'REFERENCE_NUMBER' | translate}}</th>
+                        <th>{{'PAID_BY' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let salesItempayments of salesOrder.salesOrderPayments;">
+                        <td class="head">{{salesItempayments.paymentDate | utcToLocalTime:'shortDate'}}</td>
+                        <td class="head">{{salesItempayments.amount | customCurrency}}</td>
+                        <td class="head">{{salesItempayments.referenceNumber}}</td>
+                        <td class="head">{{salesItempayments.paymentMethod | paymentmethod}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div *ngIf="salesOrder.termAndCondition">
+        <div class="page-header-main">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-auto col-sm-auto">
+                    <div class="content-header">
+                        <h1>{{"TERMS_AND_CONDITION" | translate}}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    {{salesOrder?.termAndCondition}}<br>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="salesOrder.note">
+        <div class="page-header-main">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-auto col-sm-auto">
+                    <div class="content-header">
+                        <h1>{{"NOTE" | translate}}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    {{salesOrder?.note}}<br>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mb-1">
+            <button type="button" (click)="cancel()" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i>
+                {{'CANCEL' | translate}}
+            </button>
+        </div>
+    </div>
+
+
+</ng-container>
+<div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>
+<ng-container *ngIf="salesOrderForInvoice">
+    <app-sales-order-invoice [salesOrder]="salesOrderForInvoice"></app-sales-order-invoice>
+</ng-container>

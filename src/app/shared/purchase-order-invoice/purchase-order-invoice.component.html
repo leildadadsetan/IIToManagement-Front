@@ -1,0 +1,224 @@
+<div style="position:absolute;left:-15420px">
+    <div style="width:100%;display:flex;">
+        <div id="purchaseOrderInvoice">
+            <div class="container" style="width:80%;margin-right:auto;margin-left:auto;">
+                <div class="brand-section">
+                    <div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div class="col-6" style="width: 50%;flex: 0 0 auto;">
+                            <div>
+                                <h3 *ngIf ="isquatation"
+                                    style="margin-bottom: 0px !important;">{{'PURCHASE_ORDER_REQUEST' | translate}}</h3>
+                                <h3 *ngIf ="!isquatation"
+                                    style="margin-bottom: 0px !important;">{{'PURCHASE_ORDER_INVOICE' | translate}}</h3>
+                                <span>{{purchaseOrderForInvoice?.orderNumber}}
+                                </span>
+                            </div>
+                            <div>
+                                <span> {{'ORDER_DATE' | translate}} :</span> {{purchaseOrderForInvoice?.poCreatedDate
+                                | utcToLocalTime:'shortDate'}}
+                            </div>
+                        </div>
+                        <div class="col-6" style="width: 50%;flex: 0 0 auto;">
+                            <div class="company-details" style="float: right;
+                        text-align: right;">
+                                <img *ngIf="!companyProfile.logoUrl" class="img-fluid" style="max-height:50px;
+                              object-position: left;" src="../../../assets/images/logo.png" />
+                                <img *ngIf="companyProfile.logoUrl" class="img-fluid" style="max-height:50px;
+                              object-position: left;" [src]="companyProfile.logoUrl" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body-section" style="padding:10px 10px 20px 20px;border: 1px solid gray;margin-top:10px;">
+                    <div class="row" style="display:flex;flex-wrap: wrap;">
+                        <div class="col-8" style="width:50%;flex: 0 0 auto;">
+                            <h4 class="heading" style="margin-bottom: 2px;">{{'TO' | translate}},</h4>
+                            <b>{{purchaseOrderForInvoice?.supplier?.supplierName}}</b> <br>
+                            <div *ngIf="purchaseOrderForInvoice.supplier?.billingAddress" style="width:50%;">
+                                <span> {{purchaseOrderForInvoice.supplier.billingAddress?.address}} </span>
+                            </div>
+                            <div style="margin-top: 2px;">
+                                <div *ngIf="purchaseOrderForInvoice?.supplier?.mobileNo">
+                                    <b>{{'PHONE' | translate}}:</b>
+                                    {{purchaseOrderForInvoice.supplier.mobileNo}} <br>
+                                </div>
+                                <div *ngIf="purchaseOrderForInvoice.supplier?.email">
+                                    <b>{{'EMAIL' | translate}}:</b>
+                                    {{purchaseOrderForInvoice.supplier?.email}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4" style="width: 50%;flex: 0 0 auto;">
+                            <h4 class="heading" style="margin-bottom: 2px;">{{'FROM' | translate}},</h4>
+                            <b>{{companyProfile?.title}}</b> <br>
+                            <div style="margin-top:3px;width: 60%;">
+                                <div *ngIf="companyProfile?.address">
+                                    {{companyProfile?.address}} <br>
+                                </div>
+                                <div style="margin-top: 2px;">
+                                    <div *ngIf="companyProfile?.phone">
+                                        <b>{{'PHONE' | translate}}:</b>
+                                        {{companyProfile?.phone}} <br>
+                                    </div>
+                                    <div *ngIf="companyProfile?.email">
+                                        <b>{{'EMAIL' | translate}}:</b>
+                                        {{companyProfile?.email}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="body-section" style="padding:16px;border: 1px solid gray;">
+                    <h4 class="heading" style="margin-top:2px;">{{'PURCHASE_ORDER_ITEMS' | translate}}</h4>
+                    <table class="table-bordered"
+                        style="background-color: #fff;width:100%;border-collapse:collapse;box-shadow: 0px 0px 5px 0.5px gray;">
+                        <thead>
+                            <tr style="border:1px solid #111;background-color:#f2f2f2;">
+                                <th style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:5%;">
+                                    {{'NO.' | translate}}
+                                </th>
+                                <th style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6; width:20%;">
+                                    {{'DESCRIPTION' | translate}}</th>
+                                <th class="w-20"
+                                    style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:20%;">
+                                    {{'UNIT_PRICE' | translate}}</th>
+                                <th class="w-20"
+                                    style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:8%;">
+                                    {{'QUANTITY' | translate}} </th>
+                                <th class="w-20"
+                                    style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:20%;">
+                                    {{'DISCOUNT' | translate}}</th>
+                                <th class="w-20"
+                                    style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:20%;">
+                                    {{'TAX' | translate}}</th>
+                                <th class="w-20"
+                                    style="padding-top:08px;padding-bottom:08px;border:1px solid #dee2e6;width:20%;">
+                                    {{'TOTAL_AMOUNT' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let purchaseItem of purchaseOrderItems;let i=index">
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{i+1}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.productName}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.unitPrice | customCurrency}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.quantity}}<br> <span
+                                        style="font-size: 10px;">({{purchaseItem.unitName}})</span></td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.discount | customCurrency}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.taxValue | customCurrency}}<br>
+                                    <span style="font-size: 10px;"
+                                        *ngFor="let tax of purchaseItem.purchaseOrderItemTaxes;let last=last">
+                                        {{tax.taxName}}({{tax.taxPercentage}}%) <span *ngIf="!last">, </span>
+                                    </span>
+                                </td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{(purchaseItem?.quantity * purchaseItem?.unitPrice) - purchaseItem.discount +
+                                    purchaseItem.taxValue | customCurrency }}
+                                </td>
+                            </tr>
+                            <tr style="vertical-align:middle!important;border:1px solid #dee2e6;background-color: blanchedalmond;"
+                                *ngIf="purchaseOrderReturnsItems.length > 0">
+                                <td colspan="100%"><strong> {{'RETURNED_ITEMS' | translate}}</strong></td>
+                            </tr>
+                            <tr style="background-color: blanchedalmond;;"
+                                *ngFor="let purchaseItem of purchaseOrderReturnsItems;let i=index">
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{i+1}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.productName}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.unitPrice | customCurrency}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.quantity}}<br> <span
+                                        style="font-size: 10px;">({{purchaseItem.unitName}})</span></td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.discount | customCurrency}}</td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{purchaseItem.taxValue | customCurrency}}<br>
+                                    <span style="font-size: 10px;"
+                                        *ngFor="let tax of purchaseItem.purchaseOrderItemTaxes;let last=last">
+                                        {{tax.taxName}}({{tax.taxPercentage}}%) <span *ngIf="!last">, </span>
+                                    </span>
+                                </td>
+                                <td style="vertical-align:middle!important;text-align:center;border:1px solid #dee2e6;">
+                                    {{(purchaseItem?.quantity * purchaseItem?.unitPrice) - purchaseItem.discount +
+                                    purchaseItem.taxValue | customCurrency }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{'TOTAL' | translate}}
+                                </td>
+                                <td class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{purchaseOrderForInvoice.totalQuantity}}
+                                </td>
+                                <td class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{purchaseOrderForInvoice.totalDiscount | customCurrency}}
+                                </td>
+                                <td class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{purchaseOrderForInvoice.totalTax | customCurrency}}
+                                </td>
+
+                                <td style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{purchaseOrderForInvoice.totalAmount | customCurrency}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{'PAID' | translate}}</td>
+                                <td style="text-align:end;border:1px solid #dee2e6;">
+                                    {{purchaseOrderForInvoice.totalPaidAmount | customCurrency}} </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="text-right"
+                                    style="text-align:end;border:1px solid #dee2e6;font-weight: bold;">
+                                    {{'BALANCE' | translate}} </td>
+                                <td style=" text-align:end;border:1px solid #dee2e6;">
+                                    {{purchaseOrderForInvoice.totalAmount-purchaseOrderForInvoice.totalPaidAmount |
+                                    customCurrency}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="purchaseOrderForInvoice.termAndCondition"
+                        style="display:flex;flex-wrap: wrap;margin-top: 20px;">
+                        <h5 class="heading" style="margin-top:2px;">{{'TERM_AND_CONDITION' | translate}}::</h5>
+                        {{purchaseOrderForInvoice.termAndCondition}}
+                    </div>
+                    <!-- <div *ngIf="purchaseOrderForInvoice.termAndCondition"  style="display:flex;flex-wrap: wrap;margin-top: 5px; align-items:flex-start; font-size: 9px;">
+
+                    </div> -->
+                    <div *ngIf="purchaseOrderForInvoice.note" class="row"
+                        style="display:flex;flex-wrap: wrap;margin-top: 20px;">
+                        <h5 class="heading" style="margin-top:2px;">{{'NOTE' | translate}}::</h5>
+                        {{purchaseOrderForInvoice.note}}
+                    </div>
+                    <!-- <div *ngIf="purchaseOrderForInvoice.note" class="row" style="display:flex;flex-wrap: wrap; align-items:flex-start; font-size: 9px;">
+
+                    </div> -->
+                    <div class="row" style="display:flex;flex-wrap: wrap;margin-top: 20px;">
+                        <div class="col-8" style="width:60%;flex: 0 0 auto;margin-top: 10px;">
+                            {{'PAYMENT_STATUS' | translate}}:{{purchaseOrderForInvoice.paymentStatus | paymentStatus}}
+                        </div>
+                        <div class="col-4" style="width:40%;">
+                            ___________________________ <span style="margin-left:40px;">{{'AUTHORIZED_SIGNATURE' |
+                                translate}}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

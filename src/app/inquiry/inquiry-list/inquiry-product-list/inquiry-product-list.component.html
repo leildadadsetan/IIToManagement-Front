@@ -1,0 +1,62 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-8">
+                <h4 class="modal-title">
+                    {{'PRODUCT_LIST' | translate }}
+                </h4>
+            </div>
+            <div class="col-sm-auto ml-auto">
+                <button type="button" class="close" (click)="closeDialog()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="table-responsive">
+            <div class="table table-bordered table-hover">
+                <table  [dir]="langDir" mat-table [dataSource]="products" class="mat-elevation-z8 table">
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{'NAME' | translate}} </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product">
+                            {{product.name}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="brand">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef>{{'BRANDS' | translate}}  </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product"> {{product.brandName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="category">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef>{{'PRODUCT' | translate}} </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product"> {{product.categoryName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="salesPrice">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{'SALES_PRICE' | translate}} </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product">
+                            {{product.salesPrice ? (product.salesPrice | customCurrency) : '--'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="purchasePrice">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{'PURCHASE_PRICE' | translate}} </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product">
+                            {{product.purchasePrice ? (product.purchasePrice | customCurrency) : '--'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="mrp">
+                        <th class="table-column-200" mat-header-cell *matHeaderCellDef>{{'MRP' | translate}}  </th>
+                        <td class="table-column-200" mat-cell *matCellDef="let product">
+                            {{product.mrp ? (product.mrp | customCurrency) : '--'}}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>

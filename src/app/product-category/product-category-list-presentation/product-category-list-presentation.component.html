@@ -1,0 +1,114 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+                <h1>{{"PRODUCT_CATEGORIES" | translate}}</h1>
+            </div>
+        </div>
+        <div *hasClaim="'PRO_MANAGE_PRO_CAT'" class="col-md-auto col-sm-auto col-auto">
+            <button class="btn blue-btn btn-sm m-right-10" (click)="manageCategory({})">
+                <i class="fas fa-plus"></i>
+                {{"ADD_PRODUCT_CATEGORY" | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table [dir]="langDir" mat-table [dataSource]="productCategories" multiTemplateDataRows
+        class="table table-bordered table-hover grid-height">
+        <ng-container matColumnDef="subcategory">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-icon class="cursor-pointer" *ngIf="element != expandedElement" (click)="toggleRow(element)">
+                    chevron_right</mat-icon>
+                <mat-icon class="cursor-pointer" *ngIf="element == expandedElement" (click)="toggleRow(element)">
+                    expand_more</mat-icon>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th style="width:30%" mat-header-cell *matHeaderCellDef>{{'ACTION' | translate}} </th>
+            <td style="width:30%" mat-cell *matCellDef="let element">
+                <button *hasClaim="'PRO_MANAGE_PRO_CAT'" (click)="manageCategory(element)"
+                    class="btn btn-success btn-sm m-right-10" type="button">
+                    <i class="las la-pen"></i>
+                    {{'EDIT' | translate}}
+                </button>
+                <button *hasClaim="'PRO_MANAGE_PRO_CAT'" (click)="deleteCategory(element)" class="btn btn-danger btn-sm"
+                    type="button">
+                    <i class="las la-trash"></i>
+                    {{'DELETE' | translate}}
+                </button>
+            </td>
+        </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> {{'NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> {{'DESCRIPTION' | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let categoryObject" [attr.colspan]="columnsToDisplay.length">
+                <div class="example-element-detail"
+                    [@detailExpand]="categoryObject == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="inner-table mat-elevation-z8">
+                        <div class="row mb-3 align-items-center justify-content-between">
+                            <div class="col-md-auto col-sm-auto">
+                                <div class="section-title">
+                                    <h2>{{"SUB_CATEGORY" | translate}}</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-auto col-sm-auto">
+                                <h4 class="widget-title">
+                                    <button *hasClaim="'PRO_MANAGE_PRO_CAT'" class="btn blue-btn btn-sm m-right-10"
+                                        (click)="addSubCategory(categoryObject)">
+                                        <i class="las la-plus"></i>
+                                        {{"ADD_SUB_CATEGORY" | translate}}
+                                    </button>
+                                </h4>
+                            </div>
+                        </div>
+                        <table [dir]="langDir" mat-table [dataSource]="subCategories" multiTemplateDataRows class="table">
+                            <ng-container matColumnDef="action">
+                                <th style="width:40%" mat-header-cell *matHeaderCellDef>{{'ACTION' | translate}}
+                                </th>
+                                <td style="width:40%" mat-cell *matCellDef="let element">
+                                    <button *hasClaim="'PRO_MANAGE_PRO_CAT'" (click)="manageCategory(element)"
+                                        class="btn btn-success btn-sm m-right-10" type="button">
+                                        <i class="las la-pen"></i>
+                                        {{'EDIT' | translate}}
+                                    </button>
+                                    <button *hasClaim="'PRO_MANAGE_PRO_CAT'" (click)="deleteCategory(element)"
+                                        class="btn btn-danger btn-sm" type="button">
+                                        <i class="las la-trash"></i>
+                                        {{'DELETE' | translate}}
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> {{'NAME' | translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell *matHeaderCellDef> {{'DESCRIPTION' | translate}} </th>
+                                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="subCategoryColumnToDisplay;sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: subCategoryColumnToDisplay;"></tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+</div>

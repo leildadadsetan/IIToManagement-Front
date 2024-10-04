@@ -1,0 +1,153 @@
+<div class="topbar">
+    <nav class="navbar header-nav navbar-expand-lg navbar-custom">
+        <div class="topbar-left" [class.display-none]="isFromPos">
+            <a [routerLink]="['/']" class="logo">
+                <span>
+                    <img *ngIf="!logoImage" src="assets/images/logo.png" alt="logo-large" class="logo-lg">
+                    <img *ngIf="logoImage" [src]="logoImage" alt="logo-large" class="logo-lg">
+                </span>
+            </a>
+        </div>
+        <div class="form-row align-items-center ml-2">
+            <div class="col-md-auto col-auto" [class.display-none]="isFromPos">
+                <div class="hamburger cursor-pointer" (click)="togglediv()">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+            <div class="col-md-auto col-auto ml-2" [class.display-none]="isFromPos">
+                <div class="dropdown">
+                    <button class="btn blue-btn btn-sm" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"
+                        *hasClaim="['SO_ADD_SO','PO_ADD_PO','CUST_ADD_CUSTOMER','SUPP_ADD_SUPPLIER','PRO_ADD_PRODUCT','EXP_ADD_EXPENSE']">
+                        <i class="glyphicon glyphicon-plus"></i><i class="fa fa-plus"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'SO_ADD_SO'"> <a
+                                [routerLink]="['/sales-order/add']"><i class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'SALES_ORDER' | translate}}</a></button>
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'PO_ADD_PO'"><a
+                                [routerLink]="['/purchase-order/add']"><i
+                                    class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'PURCHASE_ORDER' | translate}}</a></button>
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'CUST_ADD_CUSTOMER'"><a
+                                [routerLink]="['/customer/addItem']"><i
+                                    class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'CUSTOMER' | translate}} </a></button>
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'SUPP_ADD_SUPPLIER'"><a
+                                [routerLink]="['/supplier/manage/addItem']"><i
+                                    class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'SUPPLIER' | translate}}</a></button>
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'PRO_ADD_PRODUCT'"><a
+                                [routerLink]="['/products/add']"><i class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'PRODUCT' | translate}}</a></button>
+                        <button class="dropdown-item p-2 no-unserline" type="button" *hasClaim="'EXP_ADD_EXPENSE'"><a
+                                [routerLink]="'/expense/add'"><i class="fa fa-plus ml-1 blackiconcolor"></i>&nbsp;
+                                {{'EXPENSE' | translate}}</a></button>
+                    </div>
+                </div>
+            </div>
+            <button [class.display-none]="isFromPos" [routerLink]="['/pos']" *hasClaim="'POS_POS'"
+                class="btn blue-btn btn-sm m-right-10">{{'POS' | translate}}</button>
+            <div class="col-md-auto col-auto ml-3 d-block d-md-none">
+                <div>
+                    <span class="notification-area">
+                        <i class="far fa-bell fs-24"></i>
+                        <span class="noti-count">
+                            {{notificationCount}}
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-auto col-auto">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon hamburger" style="margin-top: -10px;">
+                        <span class="line"></span><span class="line"></span><span class="line"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="list-unstyled topbar-nav ml-auto topbar-nav-right mb-0 float-right hide-when-toogle">
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                        <img class="contry-flag rounded" src="{{ language?.flag }}" alt="language" /> {{ language?.name }}
+                    </a>
+                    <ul class="dropdown-menu contry-dropdown" aria-labelledby="dropdownMenuButton">
+                        <ng-container *ngFor="let language of languages">
+                            <li role="button" class="dropdown-item" (click)="setNewLanguageRefresh(language.lang)">
+                                <img class="contry-flag ml-2" src="{{ language.flag }}"> {{ language.name }}
+                            </li>
+                        </ng-container>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown d-none d-md-block">
+                    <span class="notification-area" data-toggle="dropdown">
+                        <i class="far fa-bell fs-20 text-white"></i>
+                        <span class="noti-count">
+                            {{notificationCount}}
+                        </span>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header"></span>
+                        <div class="dropdown-divider"></div>
+                        <div *ngFor="let notificationUser of notificationUserList">
+                            <div class="dropdown-item" title="{{notificationUser.duration | utcToLocalTime:'short' }}">
+                                <i class="fas fa-envelope mr-2"></i>
+                                <ng-container [ngSwitch]="notificationUser.application">
+                                    <ng-container *ngSwitchCase="1">
+                                        <a [routerLink]="['/sales-order/detail',notificationUser.referenceId]">
+                                            {{notificationUser.subject}} -{{'SALES_ORDER_EXPECTED_SHIPMENT_DATE_IS' |
+                                            translate}}
+                                            {{notificationUser.duration | utcToLocalTime:'shortDate'}}.
+                                        </a>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="2">
+                                        <a [routerLink]="['/purchase-order/detail',notificationUser.referenceId]">
+                                            {{notificationUser.subject}}-{{'PURCHASE_ORDER_EXPECTED_DELIVERY_DATE_IS' |
+                                            translate}}
+                                            {{notificationUser.duration | utcToLocalTime:'shortDate'}}.
+                                        </a>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="3">
+                                        <a [routerLink]="['/inquiry/manage',notificationUser.referenceId]">
+                                            {{notificationUser.subject}}
+                                            {{notificationUser.duration | utcToLocalTime:'shortDate'}}.
+                                        </a>
+                                    </ng-container>
+                                    <ng-container *ngSwitchDefault>
+                                        {{notificationUser.subject}}
+                                    </ng-container>
+                                </ng-container>
+                                <small class="float-right text-muted text-sm">
+                                    {{notificationUser.duration | dateAgo }}
+                                </small>
+                            </div>
+                            <hr class="mb-0">
+                        </div>
+                        <a [routerLink]="['/notifications']" routerLinkActive="router-link-active"
+                            class="dropdown-item dropdown-footer">{{"SEE_ALL_NOTIFICATIONS" | translate}}</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link cursor-pointer" [routerLink]="['/my-profile']">
+                        <span class="left-fa-icon">
+                            <img *ngIf="appUserAuth?.profilePhoto" [src]="profilePath" alt="User Avatar"
+                                class="user-image mt-1"></span><span
+                            class="mb-0 fs-14 text-capitalize">{{appUserAuth.firstName}}
+                            {{appUserAuth.lastName}}</span>
+                        <img *ngIf="!appUserAuth?.profilePhoto" src="assets/images/user-profile.jpg" alt="User Avatar"
+                            class="user-image mt-1">
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="onLogout()">
+                        <span class="left-fa-icon"><i class="fas fa-sign-out-alt fs-15"></i></span>
+                        <span class="mb-0 fs-14 text-capitalize">{{'LOGOUT' | translate}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>

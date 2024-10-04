@@ -1,0 +1,108 @@
+<div class="page-header-main mt-2">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'LATEST_INQUIRIES' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-sm-12 col-11 table-responsive">
+        <table [dir]="langDir" mat-table class="table table-bordered table-hover" [dataSource]="inquiries" matSort
+            matSortActive="createdDate" matSortDirection="desc">
+            <ng-container matColumnDef="action" sticky>
+                <th mat-header-cell *matHeaderCellDef class="table-column-50">
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-50">
+                    <button *hasClaim="['inquiry_update_inquiry']" mat-icon-button [matMenuTriggerFor]="menu"
+                        aria-label="Action">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button *hasClaim="'inquiry_update_inquiry'" mat-menu-item
+                            [routerLink]="['/inquiry/manage', inquiry.id]">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{'EDIT' | translate}}</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="createdDate" sticky>
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'DATE' | translate}} </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.createdDate | utcToLocalTime}} </td>
+            </ng-container>
+            <ng-container matColumnDef="companyName">
+                <th mat-header-cell *matHeaderCellDef class="table-column-200 pl-3"> {{'COMPANY_NAME' |
+                    translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-200 pl-3"> {{inquiry.companyName}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'STATUS' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.inquiryStatus}} </td>
+            </ng-container>
+            <ng-container matColumnDef="source">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'SOURCE' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.inquirySource}} </td>
+            </ng-container>
+            <ng-container matColumnDef="assignTo">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'ASSIGN_TO' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.assignToName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef class="table-column-200"> {{'EMAIL' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-200"> {{inquiry.email}} </td>
+            </ng-container>
+            <ng-container matColumnDef="mobileNo">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'MOBILE' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.mobileNo}} </td>
+            </ng-container>
+            <ng-container matColumnDef="cityName">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'CITY' | translate}} </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150"> {{inquiry.cityName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="taskCount">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'TOTAL_TASKS' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150">
+                    {{inquiry.inquiryActivityCount}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="commentCount">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'TOTAL_COMMENTS' | translate}}
+                </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150">
+                    {{inquiry.inquiryNoteCount}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="attachmentCount">
+                <th mat-header-cell *matHeaderCellDef class="table-column-150"> {{'TOTAL_ATTACHMENTS' |
+                    translate}} </th>
+                <td mat-cell *matCellDef="let inquiry" class="table-column-150">
+                    {{inquiry.inquiryAttachmentCount}}
+                </td>
+            </ng-container>
+            <ng-container *ngIf="inquiries.length === 0" matColumnDef="no-records">
+                <td mat-footer-cell colspan="12" *matFooterCellDef>
+                  <b> {{'NO_DATA_FOUND' | translate}}</b>
+                </td>
+              </ng-container>
+              <tr *matNoDataRow>
+                <td colspan="9">
+                    <span class="p-4 mt-4">
+                        <b> {{'NO_DATA_FOUND' | translate}}</b>
+                    </span>
+                </td>
+            </tr>
+            <tr mat-header-row *matHeaderRowDef="displayedInquiryColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedInquiryColumns;"></tr>
+        </table>
+    </div>
+</div>

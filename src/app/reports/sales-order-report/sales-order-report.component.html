@@ -1,0 +1,302 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'SALES_ORDER_REPORT' | translate}}</h1>
+      </div>
+    </div>
+    <div class="col-md-auto col-sm-auto">
+      <button class="btn blue-btn btn-sm m-right-10" *hasClaim="'sales_order_add_sales_order'"
+        [routerLink]="['/sales-order/add']">
+        <i class="fas fa-plus"></i> {{'ADD_SALES_ORDER' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+  <mat-spinner></mat-spinner>
+</div>
+<div class="row">
+  <div class="col-sm-12 mb-3">
+    <form [formGroup]="searchForm">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="fromDate">{{'FROM_DATE' | translate}} </label>
+            <input class="form-control" id="fromDate" [max]="currentDate" formControlName="fromDate"
+              [owlDateTimeTrigger]="fromDate" [owlDateTime]="fromDate" placeholder="{{'FROM_DATE' | translate}}">
+            <owl-date-time [pickerType]="'calendar'" #fromDate></owl-date-time>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="toDate">{{'TO_DATE' | translate}} </label>
+            <input class="form-control" id="toDate" [max]="currentDate" formControlName="toDate"
+              [owlDateTimeTrigger]="toDate" [owlDateTime]="toDate" placeholder="{{'TO_DATE' | translate}}">
+            <owl-date-time [pickerType]="'calendar'" #toDate></owl-date-time>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>{{'SELECT_PRODUCT' | translate}} </label>
+            <mat-select [dir]="langDir" formControlName="productId" placeholder="{{'SELECT_PRODUCT' | translate}}" class="form-control">
+              <input class="form-control w-100" formControlName="filterProductValue" focused="'true'" type="text"
+                autocomplete="off" placeholder="{{'SEARCH_OTHER_PRODUCTS' | translate}}">
+              <mat-divider></mat-divider>
+              <mat-option [dir]="langDir" *ngFor="let a of products" [value]="a.id">
+                {{a.name}}
+              </mat-option>
+              <mat-option [value]="" *ngIf="products.length==0">
+                {{'NO_RECORDS' | translate}}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="col-md-5 report-tool-bar">
+          <button type="submit" (click)="onSearch()" class="btn btn-primary btn-sm m-right-10"><i
+              class="fas fa-search"></i> {{'SEARCH' |
+            translate}}
+          </button>
+          <button type="submit" (click)="onClear()" class="btn btn-danger btn-sm m-right-10"><i class="fas fa-eraser"></i>
+            {{'CLEAR' |
+            translate}}
+          </button>
+          <button type="submit" (click)="onDownloadReport()" class="btn btn-warning btn-sm m-right-10"><i
+            class="fas fa-download"></i> {{'DOWNLOAD_REPORT' | translate}}
+          </button>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div *ngIf="searchForm.errors">
+            <div class="text-danger" *ngIf="searchForm.errors?.dateRange">
+              {{'DATE_RANGE_VALIDATION_MSG' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-responsive">
+      <table [dir]="langDir" mat-table [dataSource]="dataSource" multiTemplateDataRows
+        class="table table-bordered table-hover grid-height" matSort matSortActive="soCreatedDate">
+        <ng-container matColumnDef="action">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+          </th>
+          <td class="table-column-150" mat-cell *matCellDef="let so">
+            <button mat-icon-button (click)="toggleRow(so)">
+              <mat-icon *ngIf="so != expandedElement">chevron_right</mat-icon>
+              <mat-icon *ngIf="so == expandedElement">expand_more</mat-icon>
+            </button>
+
+            <button class="ml-4"
+              *hasClaim="['sales_order_view_sales_order_detail','sales_order_delete_sales_order','sales_order_edit_sales_order','sales_order_AddPayment_sales_order','sales_order_ViewPayment_sales_order']"
+              mat-icon-button [matMenuTriggerFor]="menu" aria-label="Action">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" [dir]="langDir">
+              <button *hasClaim="'sales_order_edit_sales_order'" mat-menu-item
+                [routerLink]="['/sales-order/detail', so.id]">
+                <mat-icon>info</mat-icon>
+                <span>{{'DETAIL' | translate}}</span>
+              </button>
+              <ng-container *ngIf="so.status == 0">
+                <button *hasClaim="'sales_order_delete_sales_order'" mat-menu-item (click)="deleteSalesOrder(so)">
+                  <mat-icon>delete</mat-icon>
+                  <span>{{'DELETE' | translate}}</span>
+                </button>
+              </ng-container>
+
+              <ng-container>
+                <button *hasClaim="'sale_order_return'" mat-menu-item (click)="onSaleOrderReturn(so)">
+                  <mat-icon>assignment_return</mat-icon>
+                  <span>{{'SALES_ORDER_RETURN' | translate}}</span>
+                </button>
+              </ng-container>
+
+              <ng-contaner *ngIf="so.paymentStatus != 0">
+                <button *hasClaim="'sales_order_AddPayment_sales_order'" mat-menu-item (click)="addPayment(so)">
+                  <mat-icon>payment</mat-icon>
+                  <span>{{'ADD_PAYMENT' | translate}}</span>
+                </button>
+              </ng-contaner>
+              <button *hasClaim="'sales_order_ViewPayment_sales_order'" mat-menu-item (click)="viewPayment(so)">
+                <mat-icon>view_carousel</mat-icon>
+                <span>{{'VIEW_PAYMENT' | translate}}</span>
+              </button>
+              <button mat-menu-item (click)="generateInvoice(so)">
+                <mat-icon>receipt</mat-icon>
+                <span>{{'GENERATE_INVOICE' | translate}}</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="soCreatedDate">
+          <th class="table-column-100" mat-header-cell *matHeaderCellDef mat-sort-header> {{'CREATED_DATE' | translate}}
+          </th>
+          <td class="table-column-100" mat-cell *matCellDef="let so"> {{so.soCreatedDate | utcToLocalTime:'shortDate'
+            }} </td>
+        </ng-container>
+        <ng-container matColumnDef="orderNumber">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'ORDER_NUMBER' | translate}}
+          </th>
+          <td class="table-column-150" mat-cell *matCellDef="let so">
+            <a [routerLink]="['/sales-order/detail',so.id]">{{so.orderNumber}} </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="deliveryDate">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'DELIVERY_DATE' |
+            translate}}
+          </th>
+          <td class="table-column-100" mat-cell *matCellDef="let so"> {{so.deliveryDate | utcToLocalTime:'shortDate'
+            }} </td>
+        </ng-container>
+        <ng-container matColumnDef="customerName">
+          <th class="table-column-300" mat-header-cell mat-sort-header *matHeaderCellDef> {{'CUSTOMER_NAME' | translate}} </th>
+          <td class="table-column-300" mat-cell *matCellDef="let so">
+            <a [routerLink]="['/customer',so.customerId]"> {{so.customerName}} </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalDiscount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_DISCOUNT' | translate}} </th>
+          <td mat-cell *matCellDef="let so">
+            {{so.totalDiscount | customCurrency}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalTax">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_TAX' | translate}} </th>
+          <td mat-cell *matCellDef="let so">
+            {{so.totalTax | customCurrency}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_AMOUNT' | translate}} </th>
+          <td mat-cell *matCellDef="let so">
+            {{so.totalAmount | customCurrency}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalPaidAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'TOTAL_PAID_AMOUNT' | translate}} </th>
+          <td mat-cell *matCellDef="let so">
+            {{so.totalPaidAmount | customCurrency }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paymentStatus">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'PAYMENT_STATUS' | translate}} </th>
+          <td class="table-column-150" mat-cell *matCellDef="let so" style="text-align: center;">
+            <span class="badge-pill" [ngClass]="{'badge-success': so.paymentStatus ==  0,
+              'badge-danger' : so.paymentStatus == 1,
+              'badge-warning' : so.paymentStatus == 2}">{{so.paymentStatus | paymentStatus }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'IS_RETURN' | translate}} </th>
+          <td mat-cell *matCellDef="let so">
+            <ng-contaner *ngIf="so.status ==1">
+              {{'YES' | translate}}
+            </ng-contaner>
+            <ng-contaner *ngIf="so.status != 1">
+              {{'NO' | translate}}
+            </ng-contaner>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action-search">
+          <th mat-header-cell *matHeaderCellDef> </th>
+        </ng-container>
+        <ng-container matColumnDef="soCreatedDate-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="orderNumber-search">
+          <th mat-header-cell *matHeaderCellDef>
+            <input placeholder="{{'ORDER_NO' | translate}}" type="text" class="form-control w-90"
+              [(ngModel)]="OrderNumberFilter">
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="deliverDate-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="customer-search">
+          <th mat-header-cell *matHeaderCellDef>
+            <input placeholder="{{'CUSTOMER' | translate}}" type="text" class="form-control w-90"
+              [formControl]="customerNameControl" [matAutocomplete]="autoCustomer">
+            <mat-autocomplete [autoActiveFirstOption]="true" [dir]="langDir" (optionSelected)='CustomerFilter=$event.option.value'
+              #autoCustomer="matAutocomplete">
+              <mat-option value="">{{'NONE' | translate}}</mat-option>
+              <mat-option *ngFor="let customer of customerList$ | async" [dir]="langDir" [value]="customer.customerName">
+                {{customer.customerName}}
+              </mat-option>
+            </mat-autocomplete>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalDiscount-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalTax-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalPaidAmount-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="paymentStatus-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="status-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="footer">
+          <td mat-footer-cell colspan="12" *matFooterCellDef>
+            <mat-paginator [dir]="langDir" [length]="salesOrderResource.totalCount" [pageSize]="salesOrderResource.pageSize"
+              [pageSizeOptions]="[10, 20, 30]">
+            </mat-paginator>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let soObject" [attr.colspan]="displayedColumns.length">
+            <ng-container *ngIf="soObject == expandedElement">
+              <div class="example-element-detail"
+                [@detailExpand]="soObject == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="inner-table mat-elevation-z8">
+                  <app-sales-order-items [salesOrder]="soObject">
+                  </app-sales-order-items>
+                </div>
+              </div>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr *matNoDataRow>
+          <td colspan="9">
+              <span class="p-4 mt-4">
+                  <b> {{'NO_DATA_FOUND' | translate}}</b>
+              </span>
+          </td>
+      </tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.bg-warning1]="row.status===1"></tr>
+        <tr mat-header-row *matHeaderRowDef="filterColumns;sticky: true">
+
+        <tr mat-footer-row *matFooterRowDef="footerToDisplayed;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="salesOrderForInvoice">
+  <app-sales-order-invoice [salesOrder]="salesOrderForInvoice"></app-sales-order-invoice>
+</ng-container>

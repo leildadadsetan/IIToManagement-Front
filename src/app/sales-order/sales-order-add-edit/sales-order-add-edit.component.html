@@ -1,0 +1,330 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{"MANAGE_SALES_ORDERS" | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<form autocomplete="off" [formGroup]="salesOrderForm" >
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-danger">{{"SO_NUMBER" | translate}} <span>*</span></label>
+        <input formControlName="orderNumber" class="form-control w-100" type="text" [readonly]="this.isEdit">
+        <div *ngIf="salesOrderForm.get('orderNumber').touched && salesOrderForm.get('orderNumber').errors">
+          <div class="text-danger" *ngIf="salesOrderForm.get('orderNumber').errors?.required">
+            {{'SO_ORDER_NUMBER_IS_REQUIRED' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-danger" for="soCreatedDate">{{'ORDER_DATE' | translate}} *</label>
+        <input class="form-control" id="soCreatedDate" formControlName="soCreatedDate"
+          [owlDateTimeTrigger]="soCreatedDate" [owlDateTime]="soCreatedDate"
+          placeholder="{{'DELIVERY_DATE' | translate}}">
+        <div *ngIf="salesOrderForm.get('soCreatedDate').touched && salesOrderForm.get('soCreatedDate').errors">
+          <div class="text-danger" *ngIf="salesOrderForm.get('soCreatedDate').errors?.required">
+            {{'ORDER_DATE_IS_REQUIRED' | translate}}
+          </div>
+        </div>
+        <owl-date-time [pickerType]="'calendar'" #soCreatedDate></owl-date-time>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-danger" for="deliveryDate">{{'DELIVERY_DATE' | translate}} *</label>
+        <input class="form-control" id="deliveryDate" formControlName="deliveryDate" [owlDateTimeTrigger]="deliveryDate"
+          [owlDateTime]="deliveryDate" placeholder="{{'DELIVERY_DATE' | translate}}">
+        <div *ngIf="salesOrderForm.get('deliveryDate').touched && salesOrderForm.get('deliveryDate').errors">
+          <div class="text-danger" *ngIf="salesOrderForm.get('deliveryDate').errors?.required">
+            {{'DELIVERY_DATE_REQUIRED' | translate}}
+          </div>
+        </div>
+        <owl-date-time [pickerType]="'calendar'" #deliveryDate></owl-date-time>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="text-danger">{{'CUSTOMER_NAME' | translate}} *</label>
+        <div class="input-group">
+          <mat-select [dir]="langDir" formControlName="customerId" placeholder="{{'SELECT_CUSTOMER' | translate}} "
+            class="form-control">
+            <input class="form-control w-100" formControlName="filerCustomer" focused="'true'" type="text"
+              autocomplete="off" placeholder="{{'SEARCH_OTHER_CUSTOMERS' |translate}}">
+            <mat-divider></mat-divider>
+            <mat-option [dir]="langDir" *ngFor="let customer of customers" [value]="customer.id">
+              {{customer.customerName}}
+            </mat-option>
+            <mat-option [value]="" *ngIf="customers.length==0">
+              {{"NO_RECORDS" | translate}}
+            </mat-option>
+          </mat-select>
+        </div>
+        <div *ngIf="salesOrderForm.get('customerId').touched && salesOrderForm.get('customerId').errors">
+          <div class="text-danger" *ngIf="salesOrderForm.get('customerId').errors?.required">
+            {{'CUSTOMER_NAME_IS_REQUIRED' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>{{'TERM_AND_CONDITION' | translate}} </label>
+        <div class="input-group">
+          <textarea formControlName="termAndCondition" class="form-control w-100">
+            </textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>{{'NOTES' | translate}} </label>
+        <div class="input-group">
+          <textarea formControlName="note" class="form-control w-100">
+            </textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <h6>{{"SCAN_BARCODE" | translate}}</h6>
+          <input #filterValue class="form-control w-100" formControlName="filterBarCodeValue" type="text"
+            placeholder="{{'SCAN_BARCODE' | translate}}">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12" formArrayName="salesOrderItems">
+      <div class="row">
+        <div class="col-sm-12 text-right mb-2">
+          <button type="button" class="btn blue-btn btn-sm m-right-10" (click)="onAddAnotherProduct()">
+            <i class="fas fa-plus"></i> {{"ADD_ANOTHER_PRODUCT" | translate}}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm">
+              <tr>
+                <th class="table-column-10">
+                  &nbsp;
+                </th>
+                <th class="table-column-200">
+                  {{'PRODUCT' | translate}}
+                </th>
+                <th class="table-column-200">
+                  {{'WAREHOUSE' | translate}}
+                </th>
+                <th class="table-column-150">
+                  {{'UNIT' | translate}}
+                </th>
+                <th class="table-column-130">
+                  {{'PRICE' | translate}}
+                </th>
+                <th class="table-column-120">
+                  {{'QUANTITY' | translate}}
+                </th>
+                <th class="table-column-100">
+                  {{'SUBTOTAL_BEFORE_DISCOUNT' | translate}}
+                </th>
+                <th class="table-column-100">
+                  {{'DISCOUNT' | translate}}%
+                </th>
+                <th class="table-column-100">
+                  {{'SUBTOTAL_AFTER_DISCOUNT' | translate}}
+                </th>
+                <th class="table-column-300">
+                  {{'TAX' | translate}}
+                </th>
+                <th class="table-column-150">
+                  {{'TOTAL' | translate}}
+                </th>
+              </tr>
+              <tr [formGroupName]="i" *ngFor="let salesOrderItem of salesOrderItemsArray?.controls; let i = index">
+                <td>
+                  <button type="button" *ngIf="salesOrderItemsArray?.controls.length !==1" (click)="onRemoveSalesOrderItem(i)"
+                    mat-icon-button aria-label="Action">
+                    <mat-icon class="btn-danger">delete_forever</mat-icon>
+                  </button>
+                </td>
+                <td>
+                  <mat-select [dir]="langDir" formControlName="productId" placeholder="{{'SELECT_PRODUCT' | translate}}"
+                    (selectionChange)="onProductSelectionChange($event.value,i)" class="form-control">
+                    <input class="form-control w-100" formControlName="filterProductValue" focused="'true'" type="text"
+                      autocomplete="off" placeholder="{{'SEARCH_OTHER_PRODUCTS' | translate}}">
+                    <mat-divider></mat-divider>
+                    <mat-option [dir]="langDir" *ngFor="let a of filterProductsMap[i]" [value]="a.id">
+                      {{a.name}}
+                    </mat-option>
+                    <mat-option [value]="" *ngIf="filterProductsMap[i].length==0">
+                      {{'NO_RECORDS' | translate}}
+                    </mat-option>
+                  </mat-select>
+                  <div *ngIf="salesOrderItem.get('productId').touched && salesOrderItem.get('productId').errors">
+                    <div class="text-danger" *ngIf="salesOrderItem.get('productId').errors?.required">
+                      {{'PRODUCT_IS_REQUIRED' | translate}}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <mat-select [dir]="langDir" placeholder="Select Warehouse" class="form-control"
+                    formControlName="warehouseId">
+                    <mat-option *ngFor="let warehouse of warehouseMap[i]" [value]="warehouse.id">
+                      {{warehouse.name}}
+                    </mat-option>
+                  </mat-select>
+                </td>
+                <td>
+                  <mat-select [dir]="langDir" formControlName="unitId" (selectionChange)="onSelectionChange($event.value,i)" class="form-control">
+                    <mat-option [dir]="langDir" *ngFor="let a of unitsMap[i]" [value]="a.id">
+                      {{a.name}}
+                    </mat-option>
+                  </mat-select>
+                  <div *ngIf="salesOrderItem.get('unitId').touched && salesOrderItem.get('unitId').errors">
+                  <div class="text-danger" *ngIf="salesOrderItem.get('unitId').errors?.required">
+                    {{'UNIT_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+                </td>
+                <td>
+                  <input class="form-control" type="number" (change)="onUnitPriceChange()" formControlName="unitPrice"
+                    placeholder="{{'UNIT_PER_PRICE' | translate}}">
+                  <div *ngIf="salesOrderItem.get('unitPrice').touched && salesOrderItem.get('unitPrice').errors">
+                    <div class="text-danger" *ngIf="salesOrderItem.get('unitPrice').errors?.required">
+                      {{'UNIT_PER_PRICE_IS_REQUIRED' | translate}}
+                    </div>
+                    <div class="text-danger" *ngIf="salesOrderItem.get('unitPrice').errors?.min">
+                      {{"PRICE_SHOULD_BE_MORE_THEN_0" | translate}}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input class="form-control" type="number" (change)="onQuantityChange()" formControlName="quantity"
+                    placeholder="{{'QUANTITY' | translate}}">
+                  <div *ngIf="salesOrderItem.get('quantity').touched && salesOrderItem.get('quantity').errors">
+                    <div class="text-danger" *ngIf="salesOrderItem.get('quantity').errors?.required">
+                      {{'QUANTITY_IS_REQUIRED' | translate}}
+                    </div>
+                    <div class="text-danger" *ngIf="salesOrderItem.get('quantity').errors?.min">
+                      {{"QUANTITY_SHOULD_BE_MORE_THEN_0" | translate}}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ salesOrderItem.get('quantity').value | quantitiesunitprice : salesOrderItem.get('unitPrice').value
+                  | customCurrency}}
+                </td>
+                <td>
+                  <input class="form-control" formControlName="discountPercentage" (change)="onDiscountChange()"
+                    placeholder="{{'DISCOUNT' | translate}}">
+                  <div class="text-danger" *ngIf="salesOrderItem.get('discountPercentage').errors?.min">
+                    {{"DISCOUNT_SHOULD_BE_MORE_THEN_0" | translate}}
+                  </div>
+                </td>
+                <td>
+                  {{ salesOrderItem.get('quantity').value | quantitiesunitprice : salesOrderItem.get('unitPrice').value
+                  : salesOrderItem.get('discountPercentage').value | customCurrency }}
+
+                  <div class="text-danger" *ngIf="salesOrderItem.get('discountPercentage').value !=0">
+                    {{'DISCOUNT_AMOUNT' | translate}}: {{ salesOrderItem.get('quantity').value | quantitiesunitpriceTax
+                    : salesOrderItem.get('unitPrice').value : salesOrderItem.get('discountPercentage').value |
+                    customCurrency }}
+                  </div>
+                </td>
+                <td>
+                  <mat-select [dir]="langDir" formControlName="taxValue" placeholder="{{'SELECT_TAX' | translate}}"
+                    (selectionChange)="onTaxSelectionChange()" class="form-control" multiple>
+                    <mat-option [dir]="langDir" *ngFor="let tax of taxsMap[i]" [value]="tax.id">{{tax.name}}
+                      ({{tax.percentage}}%)
+                    </mat-option>
+                  </mat-select>
+                  <div *ngIf="salesOrderItem.get('taxValue').touched && salesOrderItem.get('taxValue').errors">
+                    <div class="text-danger" *ngIf="salesOrderItem.get('taxValue').errors?.required">
+                      {{'TAX_IS_REQUIRED' | translate}}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ salesOrderItem.get('quantity').value | quantitiesunitprice : salesOrderItem.get('unitPrice').value
+                  : salesOrderItem.get('discountPercentage').value: salesOrderItem.get('taxValue').value: taxsMap[i] |
+                  customCurrency}}
+                  <div class="text-danger" *ngIf="salesOrderItem.get('taxValue').value">
+                    {{"TAX_AMOUNT" | translate}}: {{ salesOrderItem.get('quantity').value | quantitiesunitpriceTax :
+                    salesOrderItem.get('unitPrice').value : salesOrderItem.get('discountPercentage').value :
+                    salesOrderItem.get('taxValue').value: taxsMap[i] | customCurrency }}
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-10 text-right font-weight-bold">
+      {{"SUB_TOTAL_BEFORE_DISCOUNT" | translate}}:
+    </div>
+    <div class="col-2 text-left  font-weight-bold">
+      {{totalBeforeDiscount | customCurrency}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-10 text-right font-weight-bold">
+      {{'TOTAL_DISCOUNT' | translate}}:
+    </div>
+    <div class="col-2 text-left text-danger  font-weight-bold">
+      {{totalDiscount | customCurrency}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-10 text-right font-weight-bold">
+      {{'TOTAL_TAX' | translate}}:
+    </div>
+    <div class="col-2 text-left  font-weight-bold">
+      {{totalTax | customCurrency}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-10 text-right font-weight-bold">
+      {{"GRAND_TOTAL" | translate}} :
+    </div>
+    <div class="col-2 text-left font-weight-bold">
+      {{grandTotal | customCurrency}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 mb-1">
+      <button type="button" (click)="onSalesOrderSubmit()" class="btn btn-success btn-sm m-right-10"
+        *hasClaim="['SO_ADD_SO','SO_UPDATE_SO','SO_RETURN_SO']">
+        <i class="fas fa-save"></i> {{'SAVE' | translate}}</button>
+      <button type="button" (click)="onSalesOrderList()" class="btn btn-danger btn-sm"><i
+          class="fas fa-times-circle"></i>
+        {{'CANCEL' | translate}}
+      </button>
+    </div>
+  </div>
+</form>
+
+
+
+<div class="loading-shade" *ngIf="isLoading">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>

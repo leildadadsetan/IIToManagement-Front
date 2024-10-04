@@ -1,0 +1,87 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'NOTIFICATIONS' | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-responsive grid-height">
+      <table  [dir]="langDir" mat-table [dataSource]="dataSource" class="table table-bordered table-hover" matSort
+        matSortActive="createdDate" matSortDirection="desc">
+        <ng-container matColumnDef="createdDate">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'CREATED_DATE' | translate}}
+          </th>
+          <td class="table-column-150" mat-cell *matCellDef="let reminder"> {{reminder.createdDate |
+            utcToLocalTime:'short'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="subject">
+          <th class="table-column-300" mat-header-cell *matHeaderCellDef mat-sort-header> {{'SUBJECT' | translate}}
+          </th>
+          <td class="table-column-300" mat-cell *matCellDef="let reminder">
+            <ng-container [ngSwitch]="reminder.application">
+              <ng-container *ngSwitchCase="1">
+                <b>
+                  <a [routerLink]="['/sales-order/detail',reminder.referenceId]">
+                    {{reminder.subject}}</a>
+                </b>- {{'SALES_ORDER_EXPECTED_SHIPMENT_DATE' | translate}}.
+              </ng-container>
+              <ng-container *ngSwitchCase="2">
+                <b>
+                  <a [routerLink]="['/purchase-order/detail',reminder.referenceId]"> {{reminder.subject}}</a>
+                </b>-{{'PURCHASE_ORDER_EXPECTED_DELIVERY_DATE' | translate}}.
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                {{reminder.subject}}
+              </ng-container>
+            </ng-container>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="message">
+          <th class="table-column-500" mat-header-cell *matHeaderCellDef mat-sort-header> {{'MESSAGE' | translate}}
+          </th>
+          <td class="table-column-500" mat-cell *matCellDef="let reminder">
+            <ng-container [ngSwitch]="reminder.application">
+              <ng-container *ngSwitchCase="1">
+                <b> {{reminder.subject}}</b>-{{'SALES_ORDER_EXPECTED_SHIPMENT_DATE_IS' | translate}}
+                <b> {{reminder.duration | date:'MM/dd/yyyy'}}</b>
+              </ng-container>
+              <ng-container *ngSwitchCase="2">
+                <b> {{reminder.subject}}</b>-{{'PURCHASE_ORDER_EXPECTED_DELIVERY_DATE_IS' | translate}}
+                <b> {{reminder.duration | date:'MM/dd/yyyy'}}</b>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                {{reminder.subject}}
+              </ng-container>
+            </ng-container>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="footer">
+          <td mat-footer-cell colspan="6" *matFooterCellDef>
+            <mat-paginator [length]="reminderResource.totalCount" [pageSize]="reminderResource.pageSize"
+              [pageSizeOptions]="[15, 20, 30]">
+            </mat-paginator>
+          </td>
+        </ng-container>
+        <tr *matNoDataRow>
+          <td colspan="9">
+              <span class="p-4 mt-4">
+                  <b> {{'NO_DATA_FOUND' | translate}}</b>
+              </span>
+          </td>
+      </tr>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr mat-footer-row *matFooterRowDef="footerToDisplayed"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+  <mat-spinner></mat-spinner>
+</div>

@@ -1,0 +1,157 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'MANAGE_CUSTOMER' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<form autocomplete="off" [formGroup]="customerForm" (ngSubmit)="onCustomerSubmit()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label class="text-danger">{{'CUSTOMER_NAME' | translate}} *</label>
+                        <input formControlName="customerName" class="form-control" type="text">
+                        <div
+                            *ngIf="customerForm.get('customerName').touched && customerForm.get('customerName').errors">
+                            <div class="text-danger" *ngIf="customerForm.get('customerName').errors?.required">
+                                {{'CUSTOMER_NAME_IS_REQUIRED' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label>{{'CONTACT_PERSON' | translate}}</label>
+                        <input formControlName="contactPerson" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="text-danger">{{'EMAIL' | translate}} *</label>
+                <input (change)="onEmailChange($event)" formControlName="email" class="form-control" type="text">
+
+                <div *ngIf="
+          customerForm.get('email').touched &&
+          customerForm.get('email').errors?.email" class="text-danger">
+                    {{'PLEASE_ENTER_VALID_EMAIL' | translate}}
+                </div>
+                <div *ngIf="
+          customerForm.get('email').touched &&
+          customerForm.get('email').errors?.required" class="text-danger">
+                    {{'EMAIL_IS_REQUIRED' | translate}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="text-danger">{{'MOBILE_NUMBER' | translate}} *</label>
+                        <input formControlName="mobileNo" (change)="onMobileNoChange($event)" class="form-control"
+                            type="text">
+                        <div *ngIf="
+            customerForm.get('mobileNo').touched &&
+            customerForm.get('mobileNo').errors?.required" class="text-danger">
+                            {{'MOBILE_IS_REQUIRED' | translate}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group ">
+                        <label>{{'PHONE_NUMBER' | translate}}</label>
+                        <input formControlName="phoneNo" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group ">
+                <label>{{'WEBSITE' | translate}}</label>
+                <input formControlName="website" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>{{'ADDRESS' | translate}}</label>
+                        <textarea formControlName="address" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-label [dir]="langDir">{{'COUNTRY' | translate}}</mat-label>
+                            <mat-select [dir]="langDir" placeholder="{{'SELECT_COUNTRY' | translate}}" class="form-control"
+                                formControlName="countryName" (selectionChange)="onCountryChange($event)">
+                                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                                    {{country.countryName}}
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <mat-label [dir]="langDir">{{'CITY' | translate}}</mat-label>
+                                <input class="form-control" autocomplete="new-city" (input)="handleFilterCity($event)"
+                                    type="text" placeholder="{{'SEARCH_CITY' | translate}}" [matAutocomplete]="auto"
+                                    formControlName="cityName" />
+                                <mat-autocomplete [dir]="langDir" #auto="matAutocomplete">
+                                    <mat-option *ngFor="let city of cities" [value]="city.cityName">
+                                        <span>{{ city.cityName }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="form-group ">
+                <label>
+                    {{'DESCRIPTION' | translate}}
+                </label>
+                <angular-editor formControlName="description" [config]="editorConfig"></angular-editor>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label>
+                {{'UPLOAD_LOGO' | translate}}
+            </label>
+            <mat-card [dir]="langDir" class="cus-mat-card text-center">
+                <input hidden (change)="onFileSelect($event)" #fileInput name="logo" type="file" name="Profile Image"
+                    fxFlex="30">
+                <img *ngIf="imgSrc" class="full-width" [src]="imgSrc" />
+                <img *ngIf="!imgSrc" class="full-width" src="../../../assets/images/company-logo.jpg" />
+                <mat-card-actions>
+                    <button type="button" *ngIf="!imgSrc" class="btn btn-success btn-sm m-right-10"
+                        (click)="fileInput.click()">
+                        <i class="far fa-image"></i> {{'ADD_LOGO' | translate}}</button>
+                    <button type="button" *ngIf="imgSrc" class="btn btn-success btn-sm m-right-10"
+                        (click)="fileInput.click()">
+                        <i class="far fa-image"></i> {{'CHANGE_LOGO' | translate}}</button>
+                    <button *ngIf="imgSrc" type="button" (click)="onRemoveImage()" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i> {{'REMOVE_LOGO' | translate}}</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="m-top-10 col-md-12">
+            <button *hasClaim="['CUST_ADD_CUSTOMER','CUST_UPDATE_CUSTOMER']" type="submit"
+                class="btn btn-success btn-sm m-right-10">
+                <i class="fas fa-save"></i>
+                {{'SAVE' | translate}}
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" (click)="onCustomerList()">
+                <i class="fas fa-times-circle"></i>
+                {{'CANCEL' | translate}}
+            </button>
+        </div>
+    </div>
+</form>

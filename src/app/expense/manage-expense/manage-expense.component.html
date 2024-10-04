@@ -1,0 +1,121 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'MANAGE_EXPENSE' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<form autocomplete="off" [formGroup]="expenseForm" (ngSubmit)="onExpenseSubmit()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="text-danger" for="expenseDate">{{'DATE' | translate}} *</label>
+                <input class="form-control" id="expenseDate" formControlName="expenseDate"
+                    [owlDateTimeTrigger]="expenseDate" [owlDateTime]="expenseDate" placeholder="{{'DATE' | translate}}">
+                <div *ngIf="expenseForm.get('expenseDate').touched && expenseForm.get('expenseDate').errors">
+                    <div class="text-danger" *ngIf="expenseForm.get('expenseDate').errors?.required">
+                        {{'EXPENSE_DATE_IS_REQUIRED' | translate}}
+                    </div>
+                </div>
+                <owl-date-time [pickerType]="'calendar'" #expenseDate></owl-date-time>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>{{'REFERENCE' | translate}} </label>
+                <input formControlName="reference" class="form-control w-100" type="text">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="text-danger">{{'AMOUNT' | translate}} * </label>
+                <input formControlName="amount" class="form-control w-100" type="number">
+                <div *ngIf="expenseForm.get('amount').touched && expenseForm.get('amount').errors">
+                    <div class="text-danger" *ngIf="expenseForm.get('amount').errors?.required">
+                        {{'AMOUNT_IS_REQUIRED' | translate}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <mat-label class="text-danger">{{'EXPENSE_CATEGORY' | translate}} *</mat-label>
+                <mat-select  [dir]="langDir" placeholder="{{'EXPENSE_CATEGORY' | translate}}" class="form-control"
+                    formControlName="expenseCategoryId">
+                    <mat-option value="">{{'NONE' | translate}}</mat-option>
+                    <mat-option *ngFor="let category of expenseCategories" [value]="category.id">
+                        {{category.name}}
+                    </mat-option>
+                </mat-select>
+                <div *ngIf="expenseForm.get('expenseCategoryId').touched &&
+                expenseForm.get('expenseCategoryId').errors?.required" class="text-danger">
+                    {{'EXPENSE_CATEGORY_IS_REQUIRED' | translate}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <mat-label>{{'USER' | translate}} </mat-label>
+                <mat-select [dir]="langDir" placeholder="{{'USER' | translate}}" class="form-control" formControlName="expenseById">
+                    <mat-option>{{'NONE' | translate}}</mat-option>
+                    <mat-option *ngFor="let user of users" [value]="user.id">
+                        {{user.firstName}} {{user.lastName}}
+                    </mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label>{{'NOTE' | translate}} </label>
+            <textarea formControlName="description" class="form-control w-100" cols="30" rows="5"></textarea>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6" *ngIf="!ReceiptName">
+            <div class="form-group">
+                <label for="txtName" class="col-form-label mr-2">{{'ATTACH_RECEIPT' | translate}}:</label>
+                <input (change)="fileEvent($event)" #fileInput name="file" type="file" name="Upload File" fxFlex="30">
+            </div>
+        </div>
+        <ng-container *ngIf="ReceiptName">
+            <div class="col-md-6" *ngIf="expenseForm.get('id').value">
+                <span class="mr-3"> <b>{{'RECEIPT' | translate}}:</b>
+                    <ng-container *ngIf="!isReceiptDeleted else showReceipt">
+                        <a href="javascript:;" (click)="downloadReceipt()"> {{ReceiptName}}</a>
+                    </ng-container>
+                    <ng-template #showReceipt>
+                        {{ReceiptName}}
+                    </ng-template>
+                </span>
+                <span class="btn btn-sm" (click)="removeReceipt()">
+                    <i class="fas fa-trash-alt text-danger"></i>
+                </span>
+            </div>
+            <div class="col-md-6" *ngIf="!expenseForm.get('id').value">
+                <span class="mr-3"> <b>{{'RECEIPT' | translate}}:</b> {{ReceiptName}}</span>
+                <span class="btn btn-sm" (click)="removeReceipt()">
+                    <i class="fas fa-trash-alt text-danger"></i>
+                </span>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-12 mb-1">
+            <button *hasClaim="['EXP_ADD_EXPENSE','EXP_UPDATE_EXPENSE']" type="submit"
+                class="btn btn-success btn-sm m-right-10">
+                <i class="fas fa-save"></i> {{'SAVE' | translate}}
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/expense']">
+                <i class="fas fa-times-circle"></i> {{'CANCEL' | translate}}
+            </button>
+        </div>
+    </div>
+</form>
+<div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>

@@ -1,0 +1,460 @@
+/* You can add global styles to this file, and also import other style files */
+
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "/src/assets/styles/color.scss";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+@import "~ng-pick-datetime-ex/assets/style/picker.min.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+body {
+    font-size: 0.9rem !important;
+}
+
+// hide button in mobile page
+@media (min-width: 576px) {
+    .d-sm-inline {
+        display: inline !important;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.m-left-0 {
+    margin-right: 0px !important;
+}
+
+.m-right-10 {
+    margin-left: 10px !important;
+}
+
+.m-right-5 {
+    margin-left: 5px !important;
+}
+
+.m-top-10 {
+    margin-top: 10px !important;
+}
+
+.m-bottom-10 {
+    margin-bottom: 10px !important;
+}
+
+.m-bottom-20 {
+    margin-bottom: 20px !important;
+}
+
+.margin-left-10 {
+    margin-right: 10px;
+}
+
+.p-top-10 {
+    padding-top: 10px !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.w-90 {
+    width: 90% !important;
+}
+
+.loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-container {
+    position: relative;
+    overflow: auto;
+    max-height: calc(100vh - 150px);
+}
+
+table {
+    width: 100%;
+}
+
+th.mat-header-cell {
+    font-weight: bold !important;
+    font-size: medium;
+    color: #374664 !important;
+    font-size: 14px;
+}
+
+.section-title {
+    border-bottom: 1px solid #f1eded;
+    margin-bottom: 0;
+}
+
+.section-title h2 {
+    display: inline-block;
+    padding-bottom: 8px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: $primary;
+}
+
+.flexbox {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 5px;
+    /* this */
+    flex-wrap: wrap;
+}
+
+.column {
+    flex: 1 1 15%;
+    text-align: center;
+    margin: 5px;
+    background-color: #1976d2;
+    padding: 20px;
+    display: flex;
+    color: #fff;
+    border: 1px solid#1976d2;
+    flex-direction: column;
+    max-width: 15%;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        background-color: #fff;
+        border: 1px solid #cacaca;
+        color: #1976d2;
+        .column-text {
+            color: blue;
+        }
+    }
+    i {
+        font-size: 40px;
+    }
+    .column-text {
+        font-weight: 600;
+        color: #fff;
+        &:hover {
+            color: blue;
+        }
+    }
+}
+
+.full-width {
+    width: 100% !important;
+}
+
+.table {
+    border: 1px solid #dcddea;
+    border-radius: 4px;
+}
+
+.table th,
+.table td {
+    padding: 0.2rem;
+    vertical-align: middle !important;
+}
+
+tr.mat-header-row {
+    height: 56px !important;
+    background-color: #efefef;
+}
+
+tr.mat-row {
+    height: 40px !important;
+}
+
+table.mat-table {
+    border: 1px solid #edeff6;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+    border-bottom: 0px !important;
+}
+
+// th.mat-header-cell {
+//   border: 0 !important;
+// }
+// .table tbody tr,
+// .table thead tr th {
+//   border-bottom: 1px solid #edeff6;
+// }
+// mat toggle css
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #1976d2 !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: rgb(25 118 210 / 31%) !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-ripple-element {
+    background-color: #1976d2 !important;
+}
+
+body {
+    font-size: 0.9rem;
+}
+
+.ps__thumb-y {
+    background-color: #fff !important;
+    width: 6px !important;
+    border-radius: 0px !important;
+    opacity: 0.5;
+}
+
+.close-btn-modal {
+    cursor: pointer;
+    width: 24px;
+    background-color: #e41e26;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    right: -10px;
+    top: -11px;
+    z-index: 55555;
+    overflow: hidden;
+    border-radius: 50%;
+    color: #fff;
+    margin-left: auto;
+    i {
+        font-size: 14px;
+    }
+}
+
+.mat-dialog-container {
+    overflow: initial !important;
+    padding: 0 0 20px 0 !important;
+}
+
+.grid-height {
+    height: calc(100vh - 185px);
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.NgxEditor__Content {
+    height: 297px;
+    overflow: auto;
+}
+
+.box.box-primary {
+    border-top-color: #3c8dbc;
+}
+
+.box {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+}
+
+.box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+}
+
+.content-header {
+    color: #323234;
+    font-weight: 600;
+    padding-left: 0px;
+}
+
+.content-header h1 {
+    font-size: 20px !important;
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.main-sidebar {
+    height: 100vh !important;
+}
+
+.dialog-grid-height {
+    max-height: calc(100vh - 250px);
+}
+
+.cdk-overlay-container {
+    z-index: 9997;
+}
+
+.loading-shade {
+    z-index: 9999;
+}
+
+.mat-paginator {
+    background-color: #efefef !important;
+    font-weight: bold;
+}
+
+.mat-footer-row {
+    background-color: #efefef !important;
+}
+
+.mat-paginator {
+    float: right !important;
+}
+
+.card {
+    .card-header {
+        color: #fff;
+        background: $primary;
+    }
+}
+
+.cdk-overlay-container {
+    z-index: 1039;
+}
+
+.file-preview-overlay-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.cdk-overlay-pane {
+    display: block !important;
+}
+
+.white-background {
+    background-color: #fff;
+}
+
+.cal-month-view .cal-day-badge {
+    background-color: $primary !important;
+}
+
+@media only screen and (max-width: 767px) {
+    .content-header h1 {
+        margin-bottom: 5px;
+    }
+}
+
+.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
+.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+    background-color: $primary !important;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: $primary !important;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle,
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: $primary;
+}
+
+.mat-pseudo-checkbox-checked,
+.mat-pseudo-checkbox-indeterminate,
+.mat-accent .mat-pseudo-checkbox-checked,
+.mat-accent .mat-pseudo-checkbox-indeterminate {
+    background: $primary;
+}
+
+.form-control:focus {
+    border-color: $primary !important;
+    box-shadow: 0 0 0 0.2rem rgb(59 31 145 / 33%) !important;
+}
+
+.owl-dt-calendar-table .owl-dt-calendar-cell-selected {
+    background-color: $primary !important;
+}
+
+.mat-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+}
+
+@for $index from 0 through 1000 {
+    $size: $index * 2;
+    .table-column-#{$size} {
+        // flex: 0 1 #{$size}#{"px"};
+        min-width: #{$size}#{"px"};
+        // padding-left: 1rem !important;
+        // padding-right: 1rem !important;
+    }
+}
+
+tr.example-detail-row {
+    height: 0 !important;
+}
+
+tr.example-detail-row>td.mat-cell {
+    border-bottom: 0 !important;
+}
+
+table {
+    border-collapse: inherit !important;
+}
+
+td.mat-cell {
+    border: 0;
+    border-bottom: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+}
+
+.table tr td:last-child {
+    border-right: 1px solid #dee2e6 !important;
+}
+
+.tbl-expandable {
+    td.mat-cell {
+        border-bottom-width: 1px !important;
+    }
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+}
+
+.inner-table {
+    margin: 5px 1em 1em 5px;
+    padding: 5px 1em 1em 5px;
+    width: 100% !important;
+}
+
+.table-bordered thead tr th {
+    border-right: none !important;
+}
+
+.bg-warning1 {
+    background-color: blanchedalmond !important;
+}
+
+.angular-editor-textarea {
+    min-height: 250px !important;
+    background-color: #fff !important;
+}
+
+.report-tool-bar {
+    margin-top: 2em !important;
+}

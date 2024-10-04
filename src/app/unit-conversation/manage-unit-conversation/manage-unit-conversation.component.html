@@ -1,0 +1,98 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-10 col">
+                <h4 class="modal-title">
+                  {{'MANAGE_UNIT' | translate}}
+                </h4>
+            </div>
+            <div class="col-sm-auto col-auto ml-auto">
+                <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="unitConversationForm">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="cityName" class="text-danger">{{'UNIT_NAME' | translate}} *</label>
+                        <input formControlName="name" type="text" class="form-control" id="cityName">
+                        <div *ngIf="unitConversationForm.get('name').touched && unitConversationForm.get('name').errors">
+                            <div class="text-danger"
+                                *ngIf="unitConversationForm.get('name').touched && unitConversationForm.get('name').errors?.required">
+                                {{'UNIT_NAME_IS_REQUIRED.' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="cityName" class="text-danger">{{'UNIT_CODE' | translate}} *</label>
+                        <input formControlName="code" type="text" class="form-control" id="cityName">
+                        <div *ngIf="unitConversationForm.get('code').touched && unitConversationForm.get('code').errors">
+                            <div class="text-danger"
+                                *ngIf="unitConversationForm.get('code').touched && unitConversationForm.get('code').errors?.required">
+                                {{'UNIT_CODE_IS_REQUIRED.' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <mat-label> {{'BASE_UNIT' | translate}}</mat-label>
+                        <mat-select [dir]="langDir" placeholder="{{'SELECT_UNIT' | translate}}" class="form-control"
+                            formControlName="parentId">
+                            <mat-option value="">{{'NONE' | translate}}</mat-option>
+                            <mat-option *ngFor="let unit of baseUnits" [value]="unit.id">
+                                {{unit.name}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="unitConversationForm.get('parentId').value">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <mat-label>{{'OPERATOR' | translate}} </mat-label>
+                        <mat-select [dir]="langDir" placeholder="{{'SELECT_OPERATOR' | translate}}" class="form-control"
+                            formControlName="operator">
+                            <mat-option [dir]="langDir" *ngFor="let operator of unitOperatorslist"
+                                [value]="operator?.id">
+                                {{operator?.id | unitOperator}}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="unitConversationForm.get('parentId').value">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="cityName">{{'OPERATION_VALUE' | translate}}</label>
+                        <input formControlName="value" type="text" class="form-control" id="cityName">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-row w-100">
+                <div class="col-md-auto col-auto">
+                    <button class="btn btn-success btn-sm m-right-10" (click)="saveUnitConversation()" cdkFocusInitial>
+                        <i class="fas fa-save"></i>
+                        {{"SAVE" | translate}}
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="onCancel()">
+                        <i class="fas fa-times-circle"></i>
+                        {{"CANCEL" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,239 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'MANAGE_REMINDER' | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <form [formGroup]="reminderForm">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="text-danger" for="subject"> {{'SUBJECT' | translate}} *</label>
+          <input formControlName="subject" type="text" class="form-control" id="subject">
+          <div *ngIf="reminderForm.get('subject').touched && reminderForm.get('subject').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('subject').errors?.required">
+              {{'SUBJECT_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="text-danger" for="message"> {{'MESSAGE' | translate}} *</label>
+          <textarea class="form-control" formControlName="message" id="message" cols="30"></textarea>
+          <div *ngIf="reminderForm.get('message').touched && reminderForm.get('message').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('message').errors?.required">
+              {{'MESSAGE_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <mat-checkbox  [dir]="langDir" color="primary" (change)="checkData($event)" formControlName="isRepeated">
+            {{'REPEATE_REMINDER' | translate}}
+          </mat-checkbox>
+        </div>
+        <div class="col-md-2">
+          <mat-checkbox  [dir]="langDir" color="primary" formControlName="isEmailNotification">{{'SEND_EMAIL' | translate}}
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+          <mat-select  [dir]="langDir" placeholder="{{'SELECT_USERS' | translate}}" class="form-control" [(value)]="selectedUsers"
+            multiple>
+            <mat-select-trigger  [dir]="langDir">
+              <span *ngIf="selectedUsers.length > 0">
+                {{selectedUsers[0].firstName}} {{selectedUsers[0].lastName}}
+              </span>
+              <span *ngIf="selectedUsers.length > 1" class="example-additional-selection">
+                (+{{selectedUsers.length - 1}} {{selectedUsers.length === 2 ? 'other' :
+                'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option  [dir]="langDir" *ngFor="let user of users" [value]="user">{{user.firstName}}
+              {{user.lastName}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row" *ngIf="reminderForm.get('isRepeated').value">
+        <div class="form-group col-md-6">
+          <label class="text-danger" for="frequency"> {{'FREQUENCY' | translate}} *</label>
+          <select class="form-control" (change)="onFrequencyChange()" formControlName="frequency" id="frequency">
+            <option value="">--{{'NONE' | translate}}--</option>
+            <option [value]="frequencyItem?.id" *ngFor="let frequencyItem of reminderFrequencies">
+              {{frequencyItem?.name}}
+            </option>
+          </select>
+          <div *ngIf="reminderForm.get('frequency').errors?.required">
+            <div class="text-danger">
+              {{'FREQUENCY_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="reminderForm.get('isRepeated').value">
+        <div class="col-md-12">
+          <div class="form-group" *ngIf="reminderForm.get('frequency').value == '0'">
+            <label for="weekDays">{{'WEEK_DAYS' | translate}}</label>
+            <div id="weekDays" class="row">
+              <div class="col-sm-auto mr-1" formArrayName="dailyReminders"
+                *ngFor="let dailyReminder of dailyRemindersArray.controls; let i=index">
+                <ng-container [formGroupName]="i">
+                  <mat-checkbox color="primary" class="mr-1" formControlName="isActive">
+                    {{dailyReminder.controls['name'].value}}
+                  </mat-checkbox>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="reminderForm.get('frequency').value == '1'">
+            <label for="weekDay">{{'WEEK_DAY' | translate}}</label>
+            <div id="weekDay">
+              <mat-radio-group formControlName="dayOfWeek">
+                <mat-radio-button class="mr-2" color="primary" [value]="day.id"
+                  *ngFor="let day of dayOfWeek; let i=index">{{day.name}}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="reminderForm.get('frequency').value == '3'">
+            <label for="Quarterly">{{'SELECT_QUARTER_DATE' | translate}}</label>
+            <div id="Quarterly" class="row">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>{{'MONTH' | translate}}</th>
+                    <th>{{'DAY' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="quarterlyReminders">
+                  <tr *ngFor="let quarterlyReminder of quarterlyRemindersArray.controls; let i=index">
+                    <ng-container [formGroupName]="i">
+                      <td>{{quarterlyReminder.controls['name'].value}}</td>
+                      <td>
+                        <select (change)="onDateChange(quarterlyReminder)" class="form-control" formControlName="month">
+                          <option [value]="mon.id" *ngFor="let mon of quarterlyReminder.controls['monthValues'].value">
+                            {{mon.name}}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(quarterlyReminder)" class="form-control" formControlName="day">
+                          <option [value]="day" *ngFor="let day of days">
+                            {{day}}
+                          </option>
+                        </select>
+                        <div *ngIf="quarterlyReminder.get('day').touched && quarterlyReminder.hasError('invalidDate')">
+                          <div class="text-danger">
+                            {{'PLEASE_SELECT_VALID_DAY' | translate}}
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="reminderForm.get('frequency').value == '4'">
+            <label for="HalfYearly">{{'SELECT_DATE' | translate}}</label>
+            <div id="HalfYearly" class="row">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>{{'MONTH' | translate}}</th>
+                    <th>{{'DAY' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="halfYearlyReminders">
+                  <tr *ngFor="let halfYearlyReminder of halfYearlyRemindersArray.controls; let i=index">
+                    <ng-container [formGroupName]="i">
+                      <td>{{halfYearlyReminder.controls['name'].value}}</td>
+                      <td>
+                        <select (change)="onDateChange(halfYearlyReminder)" class="form-control"
+                          formControlName="month">
+                          <option [value]="mon.id" *ngFor="let mon of halfYearlyReminder.controls['monthValues'].value">
+                            {{mon.name}}
+                          </option>
+                        </select>
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(halfYearlyReminder)" class="form-control" formControlName="day">
+                          <option [value]="day" *ngFor="let day of days">
+                            {{day}}
+                          </option>
+                        </select>
+                        <div
+                          *ngIf="halfYearlyReminder.get('day').touched && halfYearlyReminder.hasError('invalidDate')">
+                          <div class="text-danger">
+                            {{'PLEASE_SELECT_VALID_DAY' | translate}}
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6" *ngIf="!reminderForm.get('isRepeated').value">
+          <label class="text-danger" for="frequency"> {{'REMINDER_DATE' | translate}} *</label>
+          <input class="form-control" [owlDateTimeTrigger]="dt2" [min]="minDate" formControlName="startDate"
+            [owlDateTime]="dt2" placeholder="Date">
+          <div *ngIf="reminderForm.get('startDate').touched && reminderForm.get('startDate').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('startDate').errors?.required">
+              {{'DATE_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+          <div *ngIf="reminderForm.get('startDate').touched && reminderForm.get('startDate').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('startDate').errors?.owlDateTimeMin">
+              {{'START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME' | translate}}
+            </div>
+          </div>
+          <owl-date-time #dt2></owl-date-time>
+        </div>
+        <div class="form-group col-md-6" *ngIf="reminderForm.get('isRepeated').value">
+          <label class="text-danger" for="frequency"> {{'REMINDER_START_DATE' | translate}} *</label>
+          <input class="form-control" [owlDateTimeTrigger]="dt3" [min]="minDate" formControlName="startDate"
+            [owlDateTime]="dt3" placeholder="Start Date">
+          <div *ngIf="reminderForm.get('startDate').touched && reminderForm.get('startDate').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('startDate').errors?.required">
+              {{'START_DATE_IS_REQUIRED' | translate}}
+            </div>
+          </div>
+          <div *ngIf="reminderForm.get('startDate').touched && reminderForm.get('startDate').errors">
+            <div class="text-danger" *ngIf="reminderForm.get('startDate').errors?.owlDateTimeMin">
+              {{'START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME' | translate}}
+            </div>
+          </div>
+          <owl-date-time #dt3></owl-date-time>
+        </div>
+        <div class="form-group col-md-6" *ngIf="reminderForm.get('isRepeated').value">
+          <label for="frequency">{{'REMINDER_END_DATE' | translate}} </label>
+          <input class="form-control" [owlDateTimeTrigger]="dt4" formControlName="endDate" [owlDateTime]="dt4"
+            placeholder="End Date">
+          <owl-date-time #dt4></owl-date-time>
+        </div>
+        <div class="mt-2 col-md-12">
+          <button *hasClaim="['REM_ADD_REMINDER','REM_UPDATE_REMINDER']" (click)="createReminder()" type="submit"
+            class="btn btn-success btn-sm m-right-10"><i class="fas fa-save"></i>
+            {{'SAVE' | translate}}</button>
+          <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/reminders']"><i
+              class="fas fa-times-circle"></i>
+            {{'CANCEL' | translate}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="loading-shade" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>

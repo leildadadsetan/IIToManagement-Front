@@ -1,0 +1,93 @@
+<div class="row mb-3 align-items-center justify-content-between">
+  <div class="col-md-auto col-sm-auto">
+    <div class="section-title">
+      <h2>{{'PROFILE' | translate}}</h2>
+    </div>
+  </div>
+  <div *ngIf="!user?.provider" class="col-md-auto col-sm-auto">
+    <h4 class="widget-title">
+      <button class="btn btn-success btn-sm m-right-10" (click)="changePassword()">
+        <i class="fas fa-key"></i>
+        {{'CHANGE_PASSWORD' | translate}}
+      </button>
+    </h4>
+  </div>
+</div>
+<form [formGroup]="userForm">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label class="text-danger">{{'FIRST_NAME' | translate}} *</label>
+            <input formControlName="firstName" class="form-control" type="text">
+            <div *ngIf="userForm.get('firstName').touched && userForm.get('firstName').errors">
+              <div class="text-danger" *ngIf="userForm.get('firstName').errors?.required">
+                {{'FIRST_NAME_IS_REQUIRED' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label class="text-danger">{{'LAST_NAME' | translate}} *</label>
+            <input formControlName="lastName" class="form-control" type="text">
+            <div *ngIf="userForm.get('lastName').touched && userForm.get('lastName').errors">
+              <div class="text-danger" *ngIf="userForm.get('lastName').errors?.required">
+                {{'LAST_NAME_IS_REQUIRED' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label class="text-danger">{{'MOBILE_NUMBER' | translate}} *</label>
+            <input formControlName="phoneNumber" class="form-control" type="number">
+            <div *ngIf="userForm.get('phoneNumber').touched && userForm.get('phoneNumber').errors">
+              <div class="text-danger" *ngIf="userForm.get('phoneNumber').errors?.required">
+                {{'MOBILE_IS_REQUIRED' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>{{'EMAIL' | translate}}</label>
+            <input [attr.disabled]="true" formControlName="email" class="form-control" type="email">
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label>{{'ADDRESS' | translate}}</label>
+          <textarea formControlName="address" class="form-control"></textarea>
+        </div>
+        <div class="m-top-10 col-md-6">
+          <button class="btn btn-success btn-sm m-right-10" (click)="updateProfile()" cdkFocusInitial><i
+              class="fas fa-save"></i> {{'SAVE' | translate}}</button>
+          <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/']"><i class="fas fa-times-circle"></i>
+            {{'CANCEL' | translate}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row justify-content-center">
+        <mat-card [dir]="langDir">
+          <mat-card-header [dir]="langDir">
+            <mat-card-title [dir]="langDir">{{'PROFILE_PHOTO' | translate}}</mat-card-title>
+          </mat-card-header>
+          <input hidden (change)="fileEvent($event)" #fileInput name="logo" type="file" name="Profile Photo"
+            fxFlex="30">
+          <img *ngIf="imgURL" class="full-width" [src]="imgURL" />
+          <img *ngIf="!imgURL" class="full-width" src="../../../assets/images/user-profile.jpg" />
+          <mat-card-actions>
+            <button *ngIf="!imgURL" class="btn btn-success btn-sm m-right-10" (click)="fileInput.click()">
+              <i class="far fa-image"></i> {{'ADD_PHOTO' | translate}}</button>
+            <button *ngIf="imgURL" class="btn btn-success btn-sm m-right-10" (click)="fileInput.click()">
+              <i class="far fa-image"></i> {{'CHANGE_PHOTO' | translate}}</button>
+            <button *ngIf="imgURL" type="button" (click)="removeImage()" class="btn btn-danger btn-sm">
+              <i class="fas fa-trash-alt"></i> {{'REMOVE_PHOTO' | translate}}</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</form>

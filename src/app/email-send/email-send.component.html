@@ -1,0 +1,153 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'SEND_EMAIL' | translate }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loading-shade" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <div class="form-group">
+      <mat-label [dir]="langDir">
+        {{'SELECT_EMAIL_TAMPLATE' | translate }}
+      </mat-label>
+      <mat-select [dir]="langDir" placeholder="{{'SELECT_EMAIL_TAMPLATE' | translate}}" class="form-control"
+        name="selectedEmailTamplate" [(ngModel)]="selectedEmailTamplate" (selectionChange)="onTempateChange()">
+        <mat-option *ngFor="let tamplate of emailTamplates" [value]="tamplate">
+          {{tamplate.name}}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+</div>
+<form [formGroup]="emailForm">
+  <div class="row">
+    <div class="col-md-12 pb-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-danger" id="toAddress">
+            {{'TO' | translate }}*
+          </span>
+        </div>
+        <input formControlName="toAddress" type="text" class="form-control"
+          placeholder="{{'COMMA_SEPARATED_EMAILS' | translate}}" aria-label="To" aria-describedby="toAddress">
+      </div>
+      <div *ngIf="emailForm.get('toAddress').touched && emailForm.get('toAddress').errors">
+        <div class="text-danger" *ngIf="emailForm.get('toAddress').errors?.required">
+          {{'TO_ADDRESS_IS_REQUIRED' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 pb-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-danger" id="toAddress">
+            {{'CC' | translate }}* 
+          </span>
+        </div>
+        <input formControlName="cCAddress" type="text" class="form-control" placeholder="{{'COMMA_SEPARATED_EMAILS' | translate}}"
+          aria-label="To" aria-describedby="toAddress">
+      </div>
+      <div *ngIf="emailForm.get('cCAddress').touched && emailForm.get('cCAddress').errors">
+        <div class="text-danger" *ngIf="emailForm.get('cCAddress').errors?.required">
+          {{'CC_ADDRESS_IS_REQUIRED' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 pb-1">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-danger" id="subject">
+            {{'SUBJECT' | translate }} *
+          </span>
+        </div>
+        <input formControlName="subject" type="text" class="form-control" placeholder="{{'SUBJECT' | translate }}"
+          aria-label="To" aria-describedby="subject">
+      </div>
+      <div *ngIf="emailForm.get('subject').touched && emailForm.get('subject').errors">
+        <div class="text-danger" *ngIf="emailForm.get('subject').errors?.required">
+          {{'SUBJECT_IS_REQUIRED' | translate }}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="font-weight-bold text-danger">
+          {{'BODY' | translate }} *
+        </label>
+        <angular-editor formControlName="body" [config]="editorConfig"></angular-editor>
+        <div *ngIf="emailForm.get('body').touched && emailForm.get('body').errors">
+          <div class="text-danger" *ngIf="emailForm.get('body').errors?.required">
+            {{'BODY_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12" formArrayName="parameters">
+      <div class="row" *ngIf="parameters.controls.length>0">
+        <div class="col-md-6 font-weight-bold">
+          {{'PARAMETER_NAME' | translate }}
+        </div>
+        <div class="col-md-6 font-weight-bold text-danger">
+          {{'PARAMETER_VALUE' | translate }} *
+        </div>
+      </div>
+      <div *ngFor="let param of parameters.controls; let i=index" class="row mt-1">
+        <ng-container [formGroupName]="i">
+          <div class="col-md-6">
+            <input readonly class="form-control" type="text" formControlName="parameter">
+          </div>
+          <div class="col-md-6">
+            <input (focusout)="setParameterValue()" class="form-control" type="text" formControlName="value">
+            <div *ngIf="param.get('value').touched && param.get('value').errors">
+              <div class="text-danger" *ngIf="param.get('value').errors?.required">
+                {{'PARAMETER_VALUE_IS_REQUIRED' | translate }}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="col-md-12 mt-2">
+      <div class="form-group">
+        <label class="font-weight-bold"> {{'ATTACHMENTS' | translate}} </label>
+        <div class="dropzone" appDragDrop (onFileDropped)="onFileDropped($event)">
+          <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+          <i class="text-danger fas fa-download fa-lg" aria-hidden="true"></i>
+          <h3>{{'DRAG_AND_DROP_FILE_HERE' | translate}}</h3>
+          <h3>{{'OR' | translate}}</h3>
+          <label for="fileDropRef">{{'BROWSE_FOR_FILE' | translate}}</label>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-2">
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center"
+          *ngFor="let file of files; let i = index">
+          <h4 class="name">
+            {{ file?.name }} -- {{ formatBytes(file?.size) }}
+          </h4>
+          <span class="badge badge-pill">
+            <button class="btn btn-danger" (click)="onDeleteFile(i)">
+              <i class="text-light fas fa-trash"></i>
+            </button>
+          </span>
+          <div class="loading-shade" *ngIf="file?.progress">
+            <mat-spinner></mat-spinner>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-12 mt-1" *hasClaim="'EMAIL_SEND_EMAIL'">
+      <button (click)="sendEmail()" type="submit" class="btn btn-success">
+        <i class="fas fa-paper-plane"></i>
+        {{'SEND' | translate }}
+      </button>
+    </div>
+  </div>
+</form>

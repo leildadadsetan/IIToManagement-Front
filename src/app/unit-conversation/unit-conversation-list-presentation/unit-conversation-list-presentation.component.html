@@ -1,0 +1,53 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto col">
+      <div class="content-header">
+        <h1>{{'UNIT_CONVERSATION' | translate}}</h1>
+      </div>
+    </div>
+    <div class="col-md-auto col-sm-auto col-auto">
+      <button class="btn blue-btn btn-sm m-right-10" (click)="manageUnitConversation({})">
+        <i class="fas fa-plus"></i>
+        {{'ADD_UNIT_CONVERSATION' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table [dir]="langDir" mat-table [dataSource]="unitConversations" multiTemplateDataRows
+    class="table table-bordered table-hover grid-height">
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>{{'ACTION' | translate}} </th>
+      <td mat-cell *matCellDef="let element">
+        <button (click)="manageUnitConversation(element)" class="btn btn-success btn-sm m-right-10" type="button">
+          <i class="las la-pen"></i>
+          {{'EDIT' | translate}}
+        </button>
+        <button (click)="deleteUnitConversation(element)" class="btn btn-danger btn-sm" type="button">
+          <i class="las la-trash"></i>
+          {{'DELETE' | translate}}
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> {{'NAME' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="baseUnitName">
+      <th mat-header-cell *matHeaderCellDef> {{'BASE_UNIT' | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{element.baseUnitName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="operator">
+      <th mat-header-cell *matHeaderCellDef>{{'OPERATOR' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.operator | unitOperator}} </td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>{{'OPERATION_VALUE' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay;sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+  </table>
+</div>

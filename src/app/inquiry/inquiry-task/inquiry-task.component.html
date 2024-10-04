@@ -1,0 +1,98 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-8 col">
+                        {{'TASKS' | translate}}
+                    </div>
+                    <div class="col-sm-4 col-auto text-right">
+                        <button class="btn btn-success btn-sm m-right-10" (click)="onAddInquiryTask()">
+                            <i class="fas fa-plus"></i> {{'ADD_INQUIRY_TASK' | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 table-responsive">
+                        <table  [dir]="langDir" mat-table class="table table-bordered table-hover" [dataSource]="inquiryTasks">
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef> {{'ACTION' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask">
+                                    <button class="btn btn-success btn-sm mr-2"
+                                        (click)="onEditInquiryTask(inquiryTask)">
+                                        <i class="fas fa-pencil-alt"></i>
+                                        <span class="ml-1">{{'EDIT' | translate}}</span>
+                                    </button>
+                                    <button *ngIf="inquiryTask.isOpen" class="btn btn-danger btn-sm"
+                                        (click)="onChangeStatus(inquiryTask)">
+                                        <i class="fas fa-pencil-alt"></i>
+                                        <span class="ml-1"> {{'CLOSE' | translate}}</span>
+                                    </button>
+                                    <button *ngIf="!inquiryTask.isOpen" class="btn blue-btn btn-sm"
+                                        (click)="onChangeStatus(inquiryTask)">
+                                        <i class="fas fa-pencil-alt"></i>
+                                        <span class="ml-1"> {{'OPEN' | translate}}</span>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="subject">
+                                <th mat-header-cell *matHeaderCellDef> {{'NAME' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask"> {{inquiryTask.subject}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell *matHeaderCellDef> {{'DESCRIPTION' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask"> {{inquiryTask.description}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="dueDate">
+                                <th mat-header-cell *matHeaderCellDef> {{'DUE_DATE' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask">
+                                    <ng-container *ngIf="inquiryTask.dueDate">
+                                        {{inquiryTask.dueDate | utcToLocalTime:'shortDate'}}
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="isOpen">
+                                <th mat-header-cell *matHeaderCellDef> {{'STATUS' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask">
+                                    <ng-container *ngIf="inquiryTask.isOpen">
+                                        <span class="text-success">
+                                            {{'OPEN' | translate}}
+                                        </span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!inquiryTask.isOpen">
+                                        <span class="text-danger">
+                                            {{'CLOSE' | translate}}
+                                        </span>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="assignToName">
+                                <th mat-header-cell *matHeaderCellDef> {{'ASSIGN_TO' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask">
+                                    {{inquiryTask?.assignUser?.firstName}} {{inquiryTask?.assignUser?.lastName}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="priority">
+                                <th mat-header-cell *matHeaderCellDef> {{'PRIORITY' | translate}} </th>
+                                <td mat-cell *matCellDef="let inquiryTask">
+                                    {{inquiryTask.priority}}
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <ng-container *ngIf="inquiryTasks.length === 0">
+                            <div class="row">
+                                <div class="col-sm-12 ml-4 mt-3">
+                                    <label class="font-weight-bold"> {{'NO_DATA_FOUND' | translate}}</label>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

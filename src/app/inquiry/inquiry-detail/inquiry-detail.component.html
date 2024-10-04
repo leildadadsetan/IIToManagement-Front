@@ -1,0 +1,219 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'MANAGE_INQUIRY' | translate}}</h1>
+      </div>
+    </div>
+    <div *hasClaim="'inquiry_manage_reminders'" class="col-md-auto col-sm-auto col-auto">
+      <button class="btn blue-btn btn-sm m-right-10" (click)="onAddReminder()">
+        <i class="fas fa-plus"></i> {{'ADD_REMINDER' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        {{'DETAIL' | translate}}
+      </div>
+      <div class="card-body">
+        <form autocomplete="off" [formGroup]="inquiryForm" (ngSubmit)="onInquirySubmit()">
+          <div class="loading-shade" *ngIf="isLoading">
+            <mat-spinner *ngIf="isLoading"></mat-spinner>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <input class="form-control" placeholder="{{'SELECT_PRODUCT' | translate}}"
+                [matAutocomplete]="autoForProduct" formControlName="productNameInput" />
+              <mat-autocomplete #autoForProduct="matAutocomplete"  [dir]="langDir">
+                <mat-option (click)="selectProduct(product)" *ngFor="let product of products"
+                  [value]="product">
+                  <span>{{ product.name }}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+            <div class="col-md-12 mb-1" formArrayName="inquiryProducts">
+              <span *ngIf="inquieryProductArray.controls.length">{{'SELECTED_PRODUCTS' | translate}}:</span>
+              <br />
+              <mat-chip-list  [dir]="langDir">
+                <mat-chip *ngFor="let product of inquieryProductArray.controls; let i=index">
+                  <ng-container [formGroupName]="i">
+                    <span>{{ product.get('name').value }}</span>
+                    <i class="material-icons cursor-pointer" (click)="removeProduct(i)">
+                      clear
+                    </i>
+                  </ng-container>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mt-1">
+                <label class="text-danger">{{'INQUIRY_STATUS' | translate}} *</label>
+                <mat-select  [dir]="langDir" placeholder="{{'SELECT_STATUS' | translate}}" class="form-control"
+                  formControlName="inquiryStatusId">
+                  <mat-option *ngFor="let inquiryStatus of inquiryStatuses" [value]="inquiryStatus.id">
+                    {{inquiryStatus.name}}
+                  </mat-option>
+                </mat-select>
+                <div *ngIf="inquiryForm.get('inquiryStatusId').touched && inquiryForm.get('inquiryStatusId').errors">
+                  <div class="text-danger" *ngIf="inquiryForm.get('inquiryStatusId').errors?.required">
+                    {{'PLEASE_SELECT_INQUIRY_STATUS' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mt-1">
+                <label>{{'ASSIGN_TO' | translate}}</label>
+                <mat-select  [dir]="langDir" placeholder="{{'SELECT_USER' | translate}}" class="form-control" formControlName="assignTo">
+                  <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{user.firstName}} {{user.lastName}}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label class="text-danger">{{'ORGANIZATION' | translate}} *</label>
+                <input formControlName="companyName" class="form-control" type="text">
+                <div *ngIf="inquiryForm.get('companyName').touched && inquiryForm.get('companyName').errors">
+                  <div class="text-danger" *ngIf="inquiryForm.get('companyName').errors?.required">
+                    {{'PLEASE_ENTER_ORGANIZATION' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label class="text-danger">{{'CONTACT_PERSON' | translate}} *</label>
+                <input formControlName="contactPerson" class="form-control" type="text">
+                <div *ngIf="inquiryForm.get('contactPerson').touched && inquiryForm.get('contactPerson').errors">
+                  <div class="text-danger" *ngIf="inquiryForm.get('contactPerson').errors?.required">
+                    {{'CONTACT_PERSON_NAME_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'EMAIL' | translate}} </label>
+                <input formControlName="email" class="form-control" type="text">
+                <div *ngIf="inquiryForm.get('email').touched && inquiryForm.get('email').errors">
+                  <div class="text-danger" *ngIf="inquiryForm.get('email').errors?.email">
+
+                  </div>
+                </div>
+                <div *ngIf="inquiryForm.get('mobileNo').touched || inquiryForm.get('email').touched">
+                  <div class="text-danger" *ngIf="inquiryForm.errors?.mobileoremail">
+                    {{'EITHER_EMAIL_OR_MOBILE_NUMBER_IS_REQUIRED' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'MOBILE_NO' | translate}} </label>
+                <input formControlName="mobileNo" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'PHONE_NUMBER' | translate}}</label>
+                <input formControlName="phoneNo" class="form-control" type="text">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group ">
+                <label>{{'WEBSITE' | translate}}</label>
+                <input formControlName="website" class="form-control" type="text">
+                <div *ngIf="inquiryForm.get('website').touched && inquiryForm.get('website').errors?.valid_url"
+                  class="text-danger">
+                  {{'PLEASE_ENTER_CORRECT_URL_OF_WEBSITE' | translate}}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>{{'ADDRESS' | translate}}</label>
+                    <textarea formControlName="address" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-4">
+                  <div class="form-row">
+                    <div class="col-md-6">
+                      <label>{{'SELECT_COUNTRY' | translate}}</label>
+                      <mat-select  [dir]="langDir" placeholder="{{'SEARCH_COUNTRY' | translate}}" class="form-control"
+                        formControlName="countryName" (selectionChange)="onCountryChange($event)">
+                        <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                          {{country.countryName}}
+                        </mat-option>
+                      </mat-select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="text-danger">{{'SELECT_CITY' | translate}} *</label>
+                      <input class="form-control" autocomplete="new-city" (input)="handleFilterCity($event)" type="text"
+                        placeholder="{{'SEARCH_CITY' | translate}}" [matAutocomplete]="auto"
+                        formControlName="cityName" />
+                      <div *ngIf="inquiryForm.get('cityName').touched && inquiryForm.get('cityName').errors?.required"
+                        class="text-danger">
+                        {{'PLEASE_SELECT_CITY' | translate}}
+                      </div>
+                      <mat-autocomplete #auto="matAutocomplete"  [dir]="langDir">
+                        <mat-option *ngFor="let city of cities" [value]="city.cityName">
+                          <span>{{ city.cityName }}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="text-danger">{{'SOURCE_OF_INQUIRY' | translate}} *</label>
+              <mat-select  [dir]="langDir" class="form-control" placeholder="{{'SELECT_SOURCE' | translate}}"
+                formControlName="inquirySourceId">
+                <mat-option *ngFor="let source of sourcesOfInquiry" [value]="source.id">
+                  {{source.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error  [dir]="langDir" *ngIf="
+                    inquiryForm.get('inquirySourceId').touched &&
+                    inquiryForm.get('inquirySourceId').errors?.required" class="text-danger">
+                {{'SOURCE_OF_INQUIRY_IS_REQUIRED' | translate}}
+              </mat-error>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <label>
+                  {{'MESSAGE' | translate}}
+                </label>
+                <angular-editor formControlName="message" [config]="editorConfig"></angular-editor>
+              </div>
+            </div>
+            <div class="col-md-12 mb-1">
+              <button type="submit" class="btn btn-success btn-sm m-right-10"><i class="fas fa-save"></i> {{'SAVE' |
+                translate}}</button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="onInquiryList()"><i
+                  class="fas fa-times-circle"></i>
+                {{'CANCEL' | translate}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-2">
+  <app-inquiry-note *ngIf="inquiry?.id" [inquiryId]="inquiry?.id"></app-inquiry-note>
+</div>
+<div class="mt-2">
+  <app-inquiry-task *ngIf="inquiry?.id" [inquiryId]="inquiry?.id"></app-inquiry-task>
+</div>
+<div class="mt-2">
+  <app-inquiry-attachment *ngIf="inquiry?.id" [inquiryId]="inquiry?.id"></app-inquiry-attachment>
+</div>

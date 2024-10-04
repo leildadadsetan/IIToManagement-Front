@@ -1,0 +1,59 @@
+<div class="limiter">
+  <div class="container-login100">
+    <div class="loading-shade" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+    </div>
+    <form [formGroup]="loginFormGroup" (submit)="onLoginSubmit()" class="login100-form validate-form">
+      <div class="row">
+        <img *ngIf="!logoImage" class="login-logo mb-5" src="../../assets/images/logo.png" alt="Logo">
+        <img *ngIf="logoImage" class="login-logo mb-5" [src]="logoImage" alt="Logo">
+      </div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-12">
+          <div class="form-group ">
+            <label class="text-danger">
+              {{'EMAIL' | translate }} *
+            </label>
+            <input formControlName="userName" class="form-control" type="text">
+            <div *ngIf="loginFormGroup.get('userName').touched && loginFormGroup.get('userName').errors"
+              class="k-tooltip-validation">
+              <div class="text-danger" *ngIf="loginFormGroup.get('userName').errors?.required">
+                {{'EMAIL_IS_REQUIRED' | translate }}
+              </div>
+              <div class="text-danger" *ngIf="loginFormGroup.get('userName').errors?.email">
+                {{'PLEASE_ENTER_VALID_EMAIL' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label class="text-danger">
+              {{'PASSWORD' | translate }} *
+            </label>
+            <div class="input-group">
+              <input formControlName="password" class="form-control" [type]="fieldTextType ? 'text' : 'password'">
+              <div class="input-group-append">
+                <span class="input-group-text cursor-pointer">
+                  <i class="fa" [ngClass]="{'fa-eye-slash':!fieldTextType,'fa-eye': fieldTextType}"
+                    (click)="fieldTextType=!fieldTextType"></i>
+                </span>
+              </div>
+            </div>
+            <div *ngIf="loginFormGroup.get('password').touched && loginFormGroup.get('password').errors?.required"
+              class="k-tooltip-validation">
+              <div class="text-danger" *ngIf="loginFormGroup.get('password').errors?.required">
+                {{'PASSWORD_IS_REQUIRED' | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-6 col-12">
+          <button type="submit" class="btn-main-large" [disabled]="!loginFormGroup.valid">
+            {{'LOGIN' | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

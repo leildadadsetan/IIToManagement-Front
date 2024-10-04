@@ -1,0 +1,83 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'PURCHASE_ORDERS' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+    <mat-spinner></mat-spinner>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table [dir]="langDir" mat-table [dataSource]="dataSource" multiTemplateDataRows class="table table-bordered table-hover" matSort
+                matSortActive="poCreatedDate">
+                <ng-container matColumnDef="poCreatedDate">
+                    <th class="table-column-100" mat-header-cell *matHeaderCellDef mat-sort-header> {{'CREATED_DATE' |
+                        translate}}
+                    </th>
+                    <td class="table-column-100" mat-cell *matCellDef="let po"> 
+                        {{po.poCreatedDate | utcToLocalTime:'shortDate'}} </td>
+                </ng-container>
+                <ng-container matColumnDef="orderNumber">
+                    <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'ORDER_NUMBER' |
+                        translate}}
+                    </th>
+                    <td class="table-column-150" mat-cell *matCellDef="let po">
+                        <a [routerLink]="['/purchase-order/detail',po.id]">{{po.orderNumber}} </a>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="paymentStatus">
+                    <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'PAYMENT_STATUS' |
+                        translate}}</th>
+                    <td mat-cell *matCellDef="let po" style="text-align: center;">
+                        <span class="badge-pill" [ngClass]="{'badge-success': po.paymentStatus == 0 ,
+                              'badge-danger' : po.paymentStatus == 1,
+                              'badge-warning' : po.paymentStatus == 2}">
+                            {{po.paymentStatus
+                            | paymentStatus }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalTax">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_TAX' | translate}} </th>
+                    <td mat-cell *matCellDef="let po">
+                        {{po.totalTax  | customCurrency }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalDiscount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_DISCOUNT' | translate}} </th>
+                    <td mat-cell *matCellDef="let po">
+                        {{po.totalDiscount  | customCurrency}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="totalAmount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_AMOUNT' | translate}} </th>
+                    <td mat-cell *matCellDef="let po">
+                        {{po.totalAmount  | customCurrency }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="footer">
+                    <td mat-footer-cell colspan="7" *matFooterCellDef>
+                        <mat-paginator  [dir]="langDir" [length]="purchaseOrderResource.totalCount"
+                            [pageSize]="purchaseOrderResource.pageSize" [pageSizeOptions]="[5, 10, 15]">
+                        </mat-paginator>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row *matFooterRowDef="footerToDisplayed;sticky: true"></tr>
+            </table>
+            <ng-container *ngIf="dataSource.count === 0">
+                <div class="row">
+                    <div class="col-sm-12 ml-4 mt-3">
+                        <label class="font-weight-bold"> {{'NO_DATA_FOUND' | translate}}</label>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

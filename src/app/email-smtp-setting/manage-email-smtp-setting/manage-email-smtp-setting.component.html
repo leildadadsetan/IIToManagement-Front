@@ -1,0 +1,90 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1 *ngIf="!isEditMode">
+          {{'ADD_EMAIL_SMTP_SETTING' | translate }}
+        </h1>
+        <h1 *ngIf="isEditMode">
+          {{'ADD_EMAIL_SMTP_SETTING' | translate }}
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+<form [formGroup]="smtpSettingForm">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group ">
+        <label class="text-danger"> {{'HOST' | translate }} *</label>
+        <input formControlName="host" class="form-control" type="text">
+        <div *ngIf="smtpSettingForm.get('host').touched && smtpSettingForm.get('host').errors">
+          <div class="text-danger" *ngIf="smtpSettingForm.get('host').errors?.required">
+            {{'HOST_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group ">
+        <label class="text-danger"> {{'PORT' | translate }} *</label>
+        <input formControlName="port" class="form-control" type="number">
+        <div *ngIf="smtpSettingForm.get('port').touched && smtpSettingForm.get('port').errors">
+          <div class="text-danger" *ngIf="smtpSettingForm.get('port').errors?.required">
+            {{'PORT_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group ">
+        <label class="text-danger"> {{'USER_NAME' | translate }} *</label>
+        <input formControlName="userName" class="form-control" type="text">
+        <div *ngIf="smtpSettingForm.get('userName').touched && smtpSettingForm.get('userName').errors">
+          <div class="text-danger" *ngIf="smtpSettingForm.get('userName').errors?.required">
+            {{'USER_NAME_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="text-danger"> {{'PASSWORD' | translate }} *</label>
+        <input autocomplete="new-password" formControlName="password" class="form-control" type="password">
+        <div *ngIf="smtpSettingForm.get('password').touched && smtpSettingForm.get('password').errors">
+          <div class="text-danger" *ngIf="smtpSettingForm.get('password').errors?.required">
+            {{'PASSWORD_IS_REQUIRED' | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-6 status-switch">
+      <mat-slide-toggle formControlName="isEnableSSL" [dir]="langDir">
+        <span *ngIf="smtpSettingForm.get('isEnableSSL').value">
+          {{'ENABLE_SSL' | translate }}
+        </span>
+        <span *ngIf="!smtpSettingForm.get('isEnableSSL').value">
+          {{'ENABLE_SSL' | translate }}
+        </span>
+      </mat-slide-toggle>
+    </div>
+    <div class="form-group col-md-6 status-switch">
+      <mat-slide-toggle formControlName="isDefault" [dir]="langDir">
+        <span *ngIf="smtpSettingForm.get('isDefault').value">
+          {{'IS_DEFAULT' | translate }}
+        </span>
+        <span *ngIf="!smtpSettingForm.get('isDefault').value">
+          {{'IS_DEFAULT' | translate }}
+        </span>
+      </mat-slide-toggle>
+    </div>
+    <div class="m-top-10 col-md-12">
+      <button *hasClaim="'EMAIL_MANAGE_EMAIL_SMTP_SETTINS'" class="btn btn-success btn-sm m-right-10" (click)="saveEmailSMTPSetting()"
+        cdkFocusInitial><i class="fas fa-save"></i> {{'SAVE' | translate }}</button>
+      <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/email-smtp']"><i
+          class="fas fa-times-circle"></i>
+        {{'CANCEL' | translate }}
+      </button>
+    </div>
+  </div>
+</form>

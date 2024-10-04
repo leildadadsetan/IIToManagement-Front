@@ -1,0 +1,191 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1>{{'PURCHASE_ORDERS_REQUEST' | translate}}</h1>
+      </div>
+    </div>
+    <div class="col-md-auto col-sm-auto">
+      <button class="btn blue-btn btn-sm m-right-10" *hasClaim="'POR_ADD_PO_REQUEST'"
+        [routerLink]="['/purchase-order-request/add']">
+        <i class="fas fa-plus"></i> {{'ADD_PURCHASE_ORDER_REQUEST' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+  <mat-spinner></mat-spinner>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-responsive">
+      <table [dir]="langDir" mat-table [dataSource]="dataSource" multiTemplateDataRows
+        class="table table-bordered table-hover grid-height" matSort matSortActive="poCreatedDate">
+        <ng-container matColumnDef="action">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+          </th>
+          <td class="table-column-150" mat-cell *matCellDef="let po">
+            <button mat-icon-button (click)="toggleRow(po)">
+              <mat-icon *ngIf="po != expandedElement">chevron_right</mat-icon>
+              <mat-icon *ngIf="po == expandedElement">expand_more</mat-icon>
+            </button>
+            <button class="ml-4"
+              *hasClaim="['POR_UPDATE_PO_REQUEST','POR_POR_DETAIL','POR_CONVERT_TO_PO','POR_DELETE_PO_REQUEST','POR_GENERATE_INVOICE']"
+              mat-icon-button [matMenuTriggerFor]="menu" aria-label="Action">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button *hasClaim="'POR_UPDATE_PO_REQUEST'" mat-menu-item (click)="onDetailPurchaseOrder(po)">
+                <mat-icon>edit</mat-icon>
+                <span>{{'EDIT' | translate}}</span>
+              </button>
+              <button mat-menu-item *hasClaim="'POR_POR_DETAIL'" [routerLink]="['/purchase-order/detail', po.id]">
+                <mat-icon>info</mat-icon>
+                <span>{{'DETAIL' | translate}}</span>
+              </button>
+              <button *hasClaim="'POR_CONVERT_TO_PO'" mat-menu-item (click)="convertToPurchaseOrder(po)">
+                <mat-icon>navigation</mat-icon>
+                <span>{{'CONVERT_TO_PURCHASE_ORDER' | translate}}</span>
+              </button>
+              <ng-container *ngIf="!po.isClosed">
+                <button *hasClaim="'POR_DELETE_PO_REQUEST'" mat-menu-item (click)="deletePurchaseOrder(po)">
+                  <mat-icon>delete</mat-icon>
+                  <span>{{'DELETE' | translate}}</span>
+                </button>
+              </ng-container>
+              <button *hasClaim="'POR_GENERATE_INVOICE'" mat-menu-item (click)="generateInvoice(po)">
+                <mat-icon>receipt</mat-icon>
+                <span>{{'GENERATE_PURCHASE_ORDER_REQUEST' | translate}}</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="poCreatedDate">
+          <th class="table-column-100" mat-header-cell *matHeaderCellDef mat-sort-header> {{'CREATED_DATE' | translate}}
+          </th>
+          <td class="table-column-100" mat-cell *matCellDef="let po"> {{po.poCreatedDate | utcToLocalTime:'shortDate'
+            }} </td>
+        </ng-container>
+        <ng-container matColumnDef="orderNumber">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'ORDER_NUMBER' | translate}}
+          </th>
+          <td class="table-column-150" mat-cell *matCellDef="let po">
+            <a [routerLink]="['/purchase-order/detail', po.id]">{{po.orderNumber}} </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="deliveryDate">
+          <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header> {{'DELIVERY_DATE' |
+            translate}}
+          </th>
+          <td class="table-column-100" mat-cell *matCellDef="let po"> {{po.deliveryDate | utcToLocalTime:'shortDate'
+            }} </td>
+        </ng-container>
+        <ng-container matColumnDef="supplierName">
+          <th class="table-column-300" mat-header-cell mat-sort-header *matHeaderCellDef> {{'SUPPLIER_NAME' |
+            translate}} </th>
+          <td class="table-column-300" mat-cell *matCellDef="let po">
+            <a [routerLink]="['/supplier/manage/',po.supplierId]"> {{po.supplierName}} </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_AMOUNT' | translate}} </th>
+          <td mat-cell *matCellDef="let po">
+            {{po.totalAmount | customCurrency }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalDiscount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_DISCOUNT' | translate}} </th>
+          <td mat-cell *matCellDef="let po">
+            {{po.totalDiscount | customCurrency }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalTax">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'TOTAL_TAX' | translate}} </th>
+          <td mat-cell *matCellDef="let po">
+            {{po.totalTax | customCurrency }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action-search">
+          <th mat-header-cell *matHeaderCellDef> </th>
+        </ng-container>
+        <ng-container matColumnDef="poCreatedDate-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="orderNumber-search">
+          <th mat-header-cell *matHeaderCellDef>
+            <input placeholder="{{'ORDER_NO' | translate}}" type="text" class="form-control w-90"
+              [(ngModel)]="OrderNumberFilter">
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="deliverDate-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="supplier-search">
+          <th mat-header-cell *matHeaderCellDef>
+            <input placeholder="{{'SUPPLIER' | translate}}" type="text" class="form-control w-90"
+              [formControl]="supplierNameControl" [matAutocomplete]="autoSupplier">
+            <mat-autocomplete [dir]="langDir" [autoActiveFirstOption]="true" (optionSelected)='SupplierFilter=$event.option.value'
+              #autoSupplier="matAutocomplete">
+              <mat-option [dir]="langDir" value="">{{'NONE' | translate}}</mat-option>
+              <mat-option *ngFor="let supplier of supplierList$ | async" [value]="supplier.supplierName">
+                {{supplier.supplierName}}
+              </mat-option>
+            </mat-autocomplete>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalDiscount-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="totalTax-search">
+          <th mat-header-cell *matHeaderCellDef>
+          </th>
+        </ng-container>
+        <ng-container matColumnDef="footer">
+          <td mat-footer-cell colspan="11" *matFooterCellDef>
+            <mat-paginator [dir]="langDir" [length]="purchaseOrderResource.totalCount" [pageSize]="purchaseOrderResource.pageSize"
+              [pageSizeOptions]="[10, 20, 30]">
+            </mat-paginator>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let poObject" [attr.colspan]="displayedColumns.length">
+            <ng-container *ngIf="poObject == expandedElement">
+              <div class="example-element-detail"
+                [@detailExpand]="poObject == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="inner-table mat-elevation-z8">
+                  <app-purchase-order-request-items [purchaseOrder]="poObject">
+                  </app-purchase-order-request-items>
+                </div>
+              </div>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <tr *matNoDataRow>
+          <td colspan="9">
+              <span class="p-4 mt-4">
+                  <b> {{'NO_DATA_FOUND' | translate}}</b>
+              </span>
+          </td>
+      </tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="filterColumns;sticky: true">
+
+        <tr mat-footer-row *matFooterRowDef="footerToDisplayed;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="purchaseOrderForInvoice">
+  <app-purchase-order-invoice [purchaseOrder]="purchaseOrderForInvoice"></app-purchase-order-invoice>
+</ng-container>

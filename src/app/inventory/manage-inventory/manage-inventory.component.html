@@ -1,0 +1,113 @@
+<div class="modal-content1">
+  <div class="modal-header">
+    <div class="d-flex w-100 align-items-center justify-content-between">
+      <div class="col-md-10 col">
+        <h4 class="modal-title">
+          {{'MANAGE_INVENTORY_FOR' | translate}} <span *ngIf="data.productName"> {{data.productName}}</span>
+        </h4>
+      </div>
+      <div class="col-sm-auto col-auto ml-auto">
+        <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="inventoryForm">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12" *ngIf="!data.productId">
+          <div class="form-group">
+            <label class="text-danger">{{'PRODUCT' | translate}} *</label>
+            <div class="input-group">
+              <mat-select formControlName="productId" [dir]="langDir" placeholder="{{'SELECT_PRODUCT' | translate}}"
+                (selectionChange)="onSelectionChange($event.value)" class="form-control">
+                <input class="form-control w-100" formControlName="filerProduct" focused="'true'" type="text"
+                  autocomplete="off" placeholder="{{'SEARCH_OTHER_PRODUCTS' | translate}}">
+                <mat-divider></mat-divider>
+                <mat-option *ngFor="let product of products" [value]="product.id">
+                  {{product.name}}
+                </mat-option>
+              </mat-select>
+            </div>
+            <div *ngIf="inventoryForm.get('productId').touched && inventoryForm.get('productId').errors">
+              <div class="text-danger" *ngIf="inventoryForm.get('productId').errors?.required">
+                {{'SELECT_PRODUCT' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="stock" class="text-danger">{{'STOCK' | translate}} *</label>
+            <input formControlName="stock" type="number" class="form-control" id="stock">
+            <div *ngIf="inventoryForm.get('stock').touched && inventoryForm.get('stock').errors">
+              <div class="text-danger"
+                *ngIf="inventoryForm.get('stock').touched && inventoryForm.get('stock').errors?.required">
+                {{'STOCK_IS_REQUIRED' | translate}}.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <mat-label class="text-danger"> {{'BASE_UNIT' | translate}}</mat-label>
+            <mat-select [dir]="langDir" placeholder="{{'SELECT_UNIT' | translate}}" class="form-control"
+              formControlName="unitId">
+              <mat-option value="">{{'NONE' | translate}}</mat-option>
+              <mat-option *ngFor="let unit of unitConversationForproduct" [value]="unit.id">
+                {{unit.name}}
+              </mat-option>
+            </mat-select>
+            <div *ngIf="inventoryForm.get('unitId').touched && inventoryForm.get('unitId').errors">
+              <div class="text-danger" *ngIf="inventoryForm.get('unitId').errors?.required">
+                {{'UNIT_IS_REQUIRED' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="pricePerUnit" class="text-danger">{{'UNIT_PER_PRICE' | translate}} *</label>
+            <input formControlName="pricePerUnit" type="number" class="form-control" id="pricePerUnit">
+            <div *ngIf="inventoryForm.get('pricePerUnit').touched && inventoryForm.get('pricePerUnit').errors">
+              <div class="text-danger"
+                *ngIf="inventoryForm.get('pricePerUnit').touched && inventoryForm.get('pricePerUnit').errors?.required">
+                {{'UNIT_PER_PRICE_IS_REQUIRED' | translate}}.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>{{'WAREHOUSE' | translate}} </label>
+            <div class="input-group">
+              <mat-select formControlName="warehouseId" [dir]="langDir" placeholder="{{'SELECT_WAREHOUSE' | translate}}"
+                class="form-control">
+                <mat-option value="">{{'NONE' | translate}}</mat-option>
+                <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
+                  {{warehouse.name}}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="form-row w-100">
+        <div class="col-md-auto col-auto">
+          <button class="btn btn-success btn-sm m-right-10" (click)="addInventory()" cdkFocusInitial>
+            <i class="fas fa-save"></i>
+            {{"SAVE" | translate}}
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="onCancel()">
+            <i class="fas fa-times-circle"></i>
+            {{"CANCEL" | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,57 @@
+<div class="close-btn-modal" (click)="closeDialog()">
+  <i class="fa fa-times"></i>
+</div>
+<div class="container p-2">
+  <div class="row mb-3 align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="section-title">
+        <h2>{{'CONTACT_US_DETAIL' | translate}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group ">
+        <label>{{'CREATED_DATE' | translate}}</label>
+        <span class="form-control">
+          {{contactUs.createdDate | date:"dd/MM/yyyy hh:mm:ss"}}
+        </span>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group ">
+        <label>{{'NAME' | translate}}</label>
+        <span class="form-control">
+          {{contactUs.name}}
+        </span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group ">
+        <label>{{'EMAIL' | translate}}</label>
+        <span class="form-control">
+          {{contactUs.email}}
+        </span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group ">
+        <label>{{'PHONE' | translate}}</label>
+        <span class="form-control">
+          {{contactUs.phone}}
+        </span>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group ">
+        <label>{{'MESSAGE' | translate}}</label>
+        <textarea type="text" readonly class="form-control" value="contactUs.message"></textarea>
+      </div>
+    </div>
+    <div class="m-top-10 col-md-12">
+      <button type="button" class="btn btn-danger btn-sm" (click)="closeDialog()"><i class="fas fa-times-circle"></i>
+        {{'CLOSE' | translate}}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{"LOGS" | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mat-elevation-z8">
+    <div class="loading-shade" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="row mb-3">
+        <div class="col-sm-4 form-group">
+            <mat-select  [dir]="langDir" class="form-control" [(value)]="nLogResource.level" placeholder="{{'SELECT_LEVEL' | translate}}"
+                (selectionChange)="onLevelChange($event)">
+                <mat-option [value]="">{{"NONE" | translate}}</mat-option>
+                <mat-option *ngFor="let level of levels" [value]="level">
+                    {{level}}
+                </mat-option>
+            </mat-select>
+        </div>
+        <div class="col-sm-4 form-group">
+            <mat-select  [dir]="langDir" class="form-control" [(value)]="nLogResource.source"
+                placeholder="{{'SELECT_SOURCE' | translate}}" (selectionChange)="onSourceChange($event)">
+                <mat-option [value]="">{{"NONE" | translate}}</mat-option>
+                <mat-option *ngFor="let source of sources" [value]="source">
+                    {{source}}
+                </mat-option>
+            </mat-select>
+        </div>
+        <div class="col-sm-4 form-group">
+            <input class="form-control" placeholder="{{'SEARCH_BY_MESSAGE' | translate}}" #input>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table  [dir]="langDir" mat-table [dataSource]="dataSource" class="table table-bordered table-hover" matSort matSortActive="logged"
+            matSortDirection="desc">
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> {{"ACTION" | translate}} </th>
+                <td mat-cell *matCellDef="let nLog">
+                    <button [routerLink]="['/logs', nLog.id]" class="btn btn-success btn-sm m-right-10" type="button">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="d-none d-sm-inline"> {{"DETAIL" | translate}}</span>
+                    </button>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="logged">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"DATE_TIME" | translate}} </th>
+                <td mat-cell *matCellDef="let nLog"> {{nLog?.logged | date:"dd/MM/yyyy hh:mm:ss"}} </td>
+            </ng-container>
+            <ng-container matColumnDef="level">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"LEVEL" | translate}} </th>
+                <td mat-cell *matCellDef="let nLog">
+                    <ng-container [ngSwitch]="nLog?.level">
+                        <span *ngSwitchCase="'Fatal'" class="badge badge-danger">{{nLog?.level}}</span>
+                        <span *ngSwitchCase="'Error'" class="badge badge-danger">{{nLog?.level}}</span>
+                        <span *ngSwitchCase="'Warn'" class="badge badge-warning">{{nLog?.level}}</span>
+                        <span *ngSwitchDefault class="badge badge-primary">{{nLog?.level}}</span>
+                    </ng-container>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="message">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"MESSAGE" | translate}} </th>
+                <td mat-cell *matCellDef="let nLog"> {{nLog.message | limitTo: 80 }} </td>
+            </ng-container>
+            <ng-container matColumnDef="source">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"SOURCE" | translate}} </th>
+                <td mat-cell *matCellDef="let nLog"> {{nLog.source}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <ng-container *ngIf="dataSource.count === 0">
+        <div class="row">
+            <div class="col-sm-12 ml-4 mt-3">
+                <label class="font-weight-bold"> {{"NO_DATA_FOUND" | translate}}</label>
+            </div>
+        </div>
+    </ng-container>
+    <mat-paginator  [dir]="langDir" class="w-100" [length]="nLogResource.totalCount" [pageSize]="nLogResource.pageSize"
+        [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+</div>

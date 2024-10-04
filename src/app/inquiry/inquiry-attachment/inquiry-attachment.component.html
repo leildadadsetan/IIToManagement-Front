@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="form-row">
+                    <div class="col-sm-8 col">
+                        {{'ATTACHMENTS' | translate}}
+                    </div>
+                    <div class="col-sm-4 text-right col-auto">
+                        <button class="btn btn-success btn-sm m-right-10" (click)="onAddInquiryAttachement()">
+                            <i class="fas fa-plus"></i> {{'ADD_ATTACHMENT' | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body ">
+                <div class="table-responsive">
+                    <table class="tbl-1000">
+                        <thead>
+                            <tr class="mat-header-row ">
+                                <th class="mat-header-cell" style="width: 100px;">{{'NAME' | translate}}</th>
+                                <th class="mat-header-cell">{{'CREATED_DATE' | translate}}</th>
+                                <th class="mat-header-cell">{{'CREATED_USER' | translate}}</th>
+                                <th class="mat-header-cell">{{'ACTION' | translate}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let inquiryAttachment of inquiryAttachments">
+                                <td> {{inquiryAttachment.name}}</td>
+                                <td>{{inquiryAttachment.createdDate | utcToLocalTime:'shortDate'}}</td>
+                                <td>
+                                    {{inquiryAttachment?.createdByUser.firstName}}
+                                    {{inquiryAttachment?.createdByUser.lastName}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm mr-2" (click)="onDownload(inquiryAttachment)">
+                                        <i class="fas fa-download"></i>
+                                        <span class="ml-1">{{'DOWNLOAD' | translate}}</span>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" (click)="onDeleted(inquiryAttachment)">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="ml-1"> {{'DELETE' | translate}}</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

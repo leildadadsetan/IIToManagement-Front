@@ -1,0 +1,68 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-9 col">
+                <h4 class="modal-title">
+                    {{"MANAGE_TAX" | translate}}
+                </h4>
+            </div>
+            <div class="col-sm-auto col-auto ml-auto">
+                <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="taxForm">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="text-danger" for="taxName">{{"NAME" | translate}} *</label>
+                        <input formControlName="name" type="text" class="form-control" id="taxName">
+                        <div *ngIf="taxForm.get('name').touched && taxForm.get('name').errors">
+                            <div class="text-danger"
+                                *ngIf="taxForm.get('name').touched && taxForm.get('name').errors?.required">
+                                {{"TAX_NAME_IS_REQUIRED" | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="text-danger" for="percentage">{{"PERCENTAGE" | translate}} *</label>
+                        <input formControlName="percentage" type="number" class="form-control" id="percentage"
+                            maxlength="100">
+                        <div
+                            *ngIf="(taxForm.get('percentage').touched || taxForm.get('percentage').dirty) && taxForm.get('percentage').errors">
+                            <div class="text-danger"
+                                *ngIf="taxForm.get('percentage').touched  && taxForm.get('percentage').errors?.required">
+                                {{"PERCENTAGE_IS_REQUIRED" | translate}}
+                            </div>
+                            <div class="text-danger"
+                                *ngIf="taxForm.get('percentage').touched  && taxForm.get('percentage').errors?.max">
+                                {{"PERCENTAGE_MUST_BE_LESS_THAN" | translate}}.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-row w-100">
+                <div class="col-md-auto col-auto">
+                    <button *hasClaim="'PRO_MANAGE_TAX'" class="btn btn-success btn-sm m-right-10" (click)="saveTax()"
+                        cdkFocusInitial><i class="fas fa-save"></i>
+                        {{"SAVE" | translate}}
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="onCancel()">
+                        <i class="fas fa-times-circle"></i>
+                        {{"CANCEL" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,117 @@
+<div class="modal-content1">
+  <div class="modal-header">
+    <div class="d-flex w-100 align-items-center justify-content-between">
+      <div class="col-md-8 col">
+        <h4 class="modal-title">
+          {{'REMINDER' | translate}}
+        </h4>
+      </div>
+      <div class="col-sm-auto ml-auto col-auto">
+        <button type="button" class="close" (click)="cancelReminder()" data-dismiss="modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <form [formGroup]="reminderForm">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label class="text-danger" for="subject"> {{'SUBJECT' | translate}} *</label>
+              <input formControlName="subject" type="text" class="form-control" id="subject">
+              <div *ngIf="reminderForm.get('subject').touched && reminderForm.get('subject').errors">
+                <div class="text-danger" *ngIf="reminderForm.get('subject').errors?.required">
+                  {{'SUBJECT_IS_REQUIRED' | translate}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label class="text-danger" for="message"> {{'MESSAGE' | translate}} *</label>
+              <textarea class="form-control" formControlName="message" id="message" cols="30"></textarea>
+              <div *ngIf="reminderForm.get('message').touched && reminderForm.get('message').errors">
+                <div class="text-danger" *ngIf="reminderForm.get('message').errors?.required">
+                  {{'MESSAGE_IS_REQUIRED' | translate}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="frequency">{{'REMINDER_DATE' | translate}} </label>
+              <input class="form-control" [owlDateTimeTrigger]="dt4" formControlName="reminderDate" [owlDateTime]="dt4"
+                placeholder="End Date">
+              <owl-date-time #dt4></owl-date-time>
+            </div>
+            <div class="col-md-7 form-group ">
+              <label for="frequency">{{'SELECT_USERS' | translate}} </label>
+              <mat-select  [dir]="langDir" placeholder="{{'SELECT_USERS' | translate}}" class="form-control"
+                formControlName="selectedUsers" multiple>
+                <mat-select-trigger [dir]="langDir">
+                  {{reminderForm.get('selectedUsers').value ? reminderForm.get('selectedUsers').value[0].firstName + ' '
+                  + reminderForm.get('selectedUsers').value[0].lastName : ''}}
+                  <span *ngIf="reminderForm.get('selectedUsers').value?.length > 1"
+                    class="example-additional-selection">
+                    (+{{reminderForm.get('selectedUsers').value.length - 1}}
+                    {{reminderForm.get('selectedUsers').value?.length === 2 ? 'other' : 'others'}})
+                  </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let user of users" [value]="user">{{user.firstName}}
+                  {{user.lastName}}
+                </mat-option>
+              </mat-select>
+            </div>
+            <div class="col-md-2 mt-4">
+              <mat-checkbox [dir]="langDir" color="primary" formControlName="isEmailNotification">{{'SEND_EMAIL' | translate}}
+              </mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+            <div class="mt-2 col-md-12">
+              <button (click)="saveReminder()" type="submit" class="btn btn-success btn-sm m-right-10"><i
+                  class="fas fa-save"></i>
+                {{'SAVE' | translate}}
+              </button>
+              <button type="button" (click)="cancelReminder()" class="btn btn-danger btn-sm"><i
+                  class="fas fa-times-circle"></i>
+                {{'CANCEL' | translate}}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mt-2">
+        <div class="table-responsive">
+          <table mat-table  [dir]="langDir" [dataSource]="reminderSchedulers" class="table table-bordered table-hover">
+            <ng-container matColumnDef="subject">
+              <th class="table-column-300" mat-header-cell *matHeaderCellDef> {{"SUBJECT" | translate}} </th>
+              <td class="table-column-300" mat-cell *matCellDef="let element"> {{element.subject}} </td>
+            </ng-container>
+            <ng-container matColumnDef="createdDate">
+              <th class="table-column-150" mat-header-cell *matHeaderCellDef> {{"DATE" | translate}} </th>
+              <td class="table-column-150" mat-cell *matCellDef="let element"> {{element.duration | utcToLocalTime:'short'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="userName">
+              <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{"NAME" | translate}} </th>
+              <td class="table-column-200" mat-cell *matCellDef="let element"> {{element.userName}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <ng-container *ngIf="reminderSchedulers.length === 0">
+            <div class="row">
+              <div class="col-sm-12 ml-4 mt-3">
+                <label class="font-weight-bold"> {{'NO_DATA_FOUND' | translate}}</label>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

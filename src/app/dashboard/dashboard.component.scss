@@ -1,0 +1,10 @@
+// table column width helper for mat-tables
+@for $index from 0 through 200 {
+    $size: $index * 2;
+
+    .table-column-#{$size} {
+        // flex: 0 1 #{$size}#{"px"};
+        min-width: #{$size}#{"px"};
+    }
+}
+

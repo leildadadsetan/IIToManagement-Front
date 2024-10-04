@@ -1,0 +1,202 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+                <h1>{{"PRODUCTS" | translate}}</h1>
+            </div>
+        </div>
+        <div class="col-md-auto col-sm-auto col-auto">
+            <button class="btn blue-btn btn-sm m-right-10" [routerLink]="['/products/add']">
+                <i class="fas fa-plus"></i> {{"ADD_PRODUCT" | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table [dir]="langDir" mat-table class="table table-bordered table-hover grid-height"
+                [dataSource]="dataSource" matSort matSortActive="createdDate" matSortDirection="desc">
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                    <td mat-cell *matCellDef="let product">
+                        <button mat-icon-button
+                            [matMenuTriggerFor]="menu" aria-label="Action">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" [dir]="langDir">
+                            <button *hasClaim="'PRO_UPDATE_PRODUCT'" [routerLink]="['/products/manage',product.id]"
+                                mat-menu-item>
+                                <mat-icon>edit</mat-icon>
+                                <span>{{'EDIT' | translate}}</span>
+                            </button>
+                            <button *hasClaim="'PRO_DELETE_PRODUCT'" mat-menu-item (click)="deleteProduct(product)">
+                                <mat-icon>delete</mat-icon>
+                                <span>{{'DELETE' | translate}}</span>
+                            </button>
+                            <button *ngIf="product.barcode" mat-menu-item (click)="generateInvoice(product)">
+                                <mat-icon>print</mat-icon>
+                                <span>{{'PRINT_BARCODE' | translate}}</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="imageUrl">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let product" class="table-column-100">
+                        <ng-container *ngIf="product.productUrl; else noImage">
+                            <img class="img-thumbnail product-thumbnail my-2" [src]="baseUrl + product.productUrl"
+                                alt="{{'PRODUCT_IMAGE' | translate}}">
+                        </ng-container>
+                        <ng-template #noImage>
+                            <img class="img-thumbnail product-thumbnail my-2" src="assets/images/no-preview.jpg"
+                                alt="{{'PRODUCT_IMAGE' | translate}}">
+                        </ng-template>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th class="table-column-300" mat-header-cell *matHeaderCellDef mat-sort-header> {{'NAME' |
+                        translate}}
+                    </th>
+                    <td class="table-column-300" mat-cell *matCellDef="let product"> {{product.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="brandName">
+                    <th class="table-column-200" mat-header-cell *matHeaderCellDef mat-sort-header> {{"BRAND" |
+                        translate}}
+                    </th>
+                    <td class="table-column-200" mat-cell *matCellDef="let product"> {{product.brandName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="categoryName">
+                    <th class="table-column-200" mat-header-cell *matHeaderCellDef mat-sort-header> {{"CATEGORY" |
+                        translate}} </th>
+                    <td class="table-column-200" mat-cell *matCellDef="let product"> {{product.categoryName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="unitName">
+                    <th class="table-column-200" mat-header-cell *matHeaderCellDef mat-sort-header> {{"UNIT" |
+                        translate}}
+                    </th>
+                    <td class="table-column-200" mat-cell *matCellDef="let product"> {{product.unitName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="purchasePrice">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"PURCHASE_PRICE" | translate}} </th>
+                    <td mat-cell *matCellDef="let product">
+                        {{product.purchasePrice ? (product.purchasePrice | customCurrency) : '--'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="salesPrice">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"SALES_PRICE" | translate}} </th>
+                    <td mat-cell *matCellDef="let product">
+                        {{product.salesPrice ? (product.salesPrice | customCurrency) : '--'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="mrp">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"MRP" | translate}} </th>
+                    <td mat-cell *matCellDef="let product">
+                        {{product.mrp ? (product.mrp | customCurrency) : '--'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="warehouse">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"WAREHOUSE" | translate}} </th>
+                    <td mat-cell *matCellDef="let product">
+                        {{product.warehouseName ? (product.warehouseName ) : '--'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action-search">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                </ng-container>
+                <ng-container matColumnDef="imageUrl-search">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                </ng-container>
+                <ng-container matColumnDef="name-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <input type="text" class="form-control" [(ngModel)]="NameFilter">
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="brandName-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-select placeholder="{{'BRAND' | translate}}" [(ngModel)]="BrandFilter"
+                            class="form-control">
+                            <mat-option [value]="">{{'NONE' | translate}}</mat-option>
+                            <mat-option *ngFor="let brand of brands" [value]="brand.id">
+                                {{brand.name}}
+                            </mat-option>
+                        </mat-select>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="categoryName-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-select [dir]="langDir" placeholder="{{'SELECT_CATEGORY' | translate}}" class="form-control"
+                            [(ngModel)]="CategoryFilter">
+                            <mat-option [value]="">{{'NONE' | translate}}</mat-option>
+                            <mat-option [dir]="langDir" *ngFor="let category of allCategories" [value]="category.id">
+                                <div class="country-item"
+                                    [ngStyle]="langDir == 'ltr' ? {'margin-left.px': category.deafLevel* 20} : {'margin-right.px': category.deafLevel* 30}">
+                                    <div *ngIf="!category.parentId">
+                                        <b> {{category.name}}</b>
+                                    </div>
+                                    <div *ngIf="category.parentId">
+                                        {{category.name}}
+                                    </div>
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="unitName-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-select [dir]="langDir" placeholder="{{'UNIT' | translate}}" [(ngModel)]="UnitFilter"
+                            class="form-control">
+                            <mat-option [value]="">{{'NONE' | translate}}</mat-option>
+                            <mat-option *ngFor="let unit of units" [value]="unit.id">
+                                {{unit.name}}
+                            </mat-option>
+                        </mat-select>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="purchasePrice-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="salesPrice-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="mrp-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="warehouse-search">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                </ng-container>
+                <ng-container matColumnDef="footer">
+                    <td mat-footer-cell colspan="10" *matFooterCellDef>
+                        <mat-paginator [dir]="langDir" [length]="productResource.totalCount"
+                            [pageSize]="productResource.pageSize" [pageSizeOptions]="[15, 20, 30]">
+                        </mat-paginator>
+                    </td>
+                </ng-container>
+                <tr *matNoDataRow>
+                    <td colspan="10">
+                        <span class="p-4 mt-4">
+                            <b> {{'NO_DATA_FOUND' | translate}}</b>
+                        </span>
+                    </td>
+                </tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-header-row *matHeaderRowDef="searchColumns;sticky: true">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="footerToDisplayed;sticky: true"></tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="loading-shade" *ngIf="dataSource.loading$ | async">
+    <mat-spinner></mat-spinner>
+</div>
+
+<ng-container *ngIf="product">
+    <app-generate-barcode [product]="product"></app-generate-barcode>
+</ng-container>

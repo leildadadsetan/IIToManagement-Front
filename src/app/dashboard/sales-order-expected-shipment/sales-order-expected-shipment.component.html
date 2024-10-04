@@ -1,0 +1,44 @@
+<ng-container *ngIf="dataSource.length > 0">
+  <div class="page-header-main mt-2">
+    <div class="row align-items-center justify-content-between">
+      <div class="col-md-auto col-sm-auto">
+        <div class="content-header">
+          <h1>{{'RECENT_SALES_ORDER_EXPECTED_SHIPMENT' | translate }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mat-elevation-z8">
+    <div class="table-responsive">
+      <table [dir]="langDir" mat-table [dataSource]="dataSource" class="table table-bordered table-hover">
+        <!-- Name Column -->
+        <ng-container matColumnDef="Order_Number">
+          <th mat-header-cell *matHeaderCellDef> {{'ORDER_NUMBER' | translate}} </th>
+          <td mat-cell *matCellDef="let element">
+            <a [routerLink]="['/sales-order/detail',element.salesOrderId]">
+              {{element.salesOrderNumber}}
+            </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Customer_Name">
+          <th mat-header-cell *matHeaderCellDef> {{'CUSTOMER' | translate}} </th>
+          <td mat-cell *matCellDef="let element">
+            <a [routerLink]="['/customer', element.customerId]">
+              {{element.customerName}}
+            </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Expected_Shipment_Date">
+          <th mat-header-cell *matHeaderCellDef> {{'EXPECTED_SHIPMENT_DATE' | translate}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.expectedShipmentDate | utcToLocalTime:'shortDate'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Quantity">
+          <th mat-header-cell *matHeaderCellDef> {{'QUANTITY' | translate}} </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</ng-container>

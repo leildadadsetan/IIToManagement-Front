@@ -1,0 +1,46 @@
+<div class="page-header-main">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-md-auto col-sm-auto col">
+            <div class="content-header">
+                <h1>{{"COUNTRY" | translate}}</h1>
+            </div>
+        </div>
+        <div *hasClaim="'SETT_MANAGE_COUNTRY'" class="col-md-auto col-sm-auto col-auto">
+            <button class="btn blue-btn btn-sm m-right-10" (click)="manageCountry({})">
+                <i class="fas fa-plus"></i>
+                {{"ADD_COUNTRY" | translate}}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="loading-shade" *ngIf="!loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div class="table-responsive">
+    <table  mat-table [dataSource]="dataSource" [dir]="langDir" class="table table-bordered table-hover">
+        <ng-container matColumnDef="action">
+            <th class="table-column-200" mat-header-cell *matHeaderCellDef> {{"ACTION" | translate}} </th>
+            <td class="table-column-200" mat-cell *matCellDef="let element">
+                <button *hasClaim="'SETT_MANAGE_COUNTRY'" (click)="manageCountry(element)" class="btn btn-success btn-sm m-right-10" type="button">
+                    <i class="fas fa-pencil-alt"></i>
+                    <span class="d-none d-sm-inline"> {{"EDIT" | translate}}</span>
+                </button>
+                <button *hasClaim="'SETT_MANAGE_COUNTRY'" (click)="deleteCountry(element)" class="btn btn-danger btn-sm" type="button">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="d-none d-sm-inline"> {{"DELETE" | translate}}</span>
+                </button>
+            </td>
+        </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="countryName">
+            <th mat-header-cell *matHeaderCellDef>{{"COUNTRY_NAME" | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.countryName}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[15, 20, 25]" showFirstLastButtons>
+    </mat-paginator>
+</div>

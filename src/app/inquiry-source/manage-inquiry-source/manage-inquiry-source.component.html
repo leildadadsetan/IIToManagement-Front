@@ -1,0 +1,50 @@
+<div class="modal-content1">
+    <div class="modal-header">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+            <div class="col-md-10 col">
+                <h4 class="modal-title">
+                    {{'MANAGE_INQUIRY_SOURCE' | translate}}
+                </h4>
+            </div>
+            <div class="col-sm-auto col-auto ml-auto">
+                <button type="button" class="close" (click)="onCancel()" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="inquirySourceForm">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="text-danger" for="inquirySourceName">{{'INQUIRY_SOURCE_NAME' | translate}}
+                            *</label>
+                        <input formControlName="name" type="text" class="form-control" id="inquirySourceName">
+                        <div *ngIf="inquirySourceForm.get('name').touched && inquirySourceForm.get('name').errors">
+                            <div class="text-danger"
+                                *ngIf="inquirySourceForm.get('name').touched && inquirySourceForm.get('name').errors?.required">
+                                {{'INQUIRY_SOURCE_NAME_IS_REQUIRED' | translate}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-row w-100">
+                <div class="col-md-auto col-auto">
+                    <button *hasClaim="'INQ_MANAGE_INQ_SOURCE'" class="btn btn-success btn-sm m-right-10"
+                        (click)="saveInquirySource()" cdkFocusInitial>
+                        <i class="fas fa-save"></i>
+                        {{"SAVE" | translate}}
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="onCancel()">
+                        <i class="fas fa-times-circle"></i>
+                        {{"CANCEL" | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

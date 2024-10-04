@@ -1,0 +1,80 @@
+<div class="page-header-main">
+    <div class="row align-items-center">
+        <div class="col-md-auto col-sm-auto">
+            <div class="content-header">
+                <h1>{{'PURCHASE_ORDER_ITEMS' | translate}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-shade" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<div class="table-responsive">
+    <table  [dir]="langDir" mat-table [dataSource]="purchaseOrderItems" class="table table-bordered table-hover">
+        <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef>{{'PRODUCT_NAME' | translate}}</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.productName}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="source">
+          <th mat-header-cell *matHeaderCellDef>{{'SOURCE' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            <ng-contaner *ngIf="element.status ==1">
+                {{'PURCHASE_ORDER_RETURN' | translate}}  
+            </ng-contaner>
+            <ng-contaner *ngIf="element.status != 1">
+                {{'PURCHASE_ORDER' | translate}}  
+            </ng-contaner>
+          </td>
+      </ng-container>
+        <ng-container matColumnDef="unitName">
+            <th mat-header-cell *matHeaderCellDef>  {{'UNIT' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.unitName}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="unitPrice">
+            <th mat-header-cell *matHeaderCellDef> {{'UNIT_PER_PRICE' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.unitPrice  | customCurrency}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> {{'QUANTITY' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.status===1? -1 * element.quantity:element.quantity}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="totalDiscount">
+            <th mat-header-cell *matHeaderCellDef> {{'TOTAL_DISCOUNT' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.discount | customCurrency}}({{element.discountPercentage}}%)
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="taxes">
+            <th mat-header-cell *matHeaderCellDef> {{'TAX' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                <span *ngFor="let tax of element.purchaseOrderItemTaxes;let last = last">
+                    {{tax.taxName}}({{tax.taxPercentage}}%) <span *ngIf="!last"> ,</span>
+                </span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="totalTax">
+            <th mat-header-cell *matHeaderCellDef>{{'TOTAL_TAX' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.taxValue | customCurrency}}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef> {{'TOTAL' | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{(element.unitPrice * element.quantity) - element.discount + element.taxValue | customCurrency}}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.bg-warning1]="row.status===1"></tr>
+    </table>
+</div>
