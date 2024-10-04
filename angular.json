@@ -44,13 +44,13 @@
                             "src/assets/styles/blue-theme.scss",
                             "node_modules/ngx-toastr/toastr.css",
                             {
-                              "input":  "src/assets/styles/main-ar.scss",
-                              "bundleName": "main-style-ar",
+                              "input":  "src/assets/styles/main-fa.scss",
+                              "bundleName": "main-style-fa",
                               "inject": false
                             },
                             {
-                              "input":  "src/styles-ar.scss",
-                              "bundleName": "common-style-ar",
+                              "input":  "src/styles-fa.scss",
+                              "bundleName": "common-style-fa",
                               "inject": false
 
                             },

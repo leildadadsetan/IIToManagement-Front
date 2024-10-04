@@ -1,7 +1,7 @@
 @import 'color';
-@import 'login-ar.scss';
-@import 'sidebar-ar.scss';
-@import 'header-ar.scss';
+@import 'login-fa.scss';
+@import 'sidebar-fa.scss';
+@import 'header-fa.scss';
 html {
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -12,7 +12,7 @@ html {
 
 body {
     color: $gray;
-    font-family: 'Poppins', sans-serif !important;
+    font-family: 'Poppins', IRANSansX !important;
     height: 100%;
     background-color: #f9f9f9 !important;
     font-size: 15px;

@@ -14,7 +14,7 @@ export function delayBootstrapping(translationService:TranslationService, docume
 export class BoostrapLoader extends BaseComponent{
   constructor(public translationService:TranslationService, public document: Document, public translate: TranslateService) {
     super(translationService);
-    translate.addLangs(['en', 'es', 'ar', 'ru', 'cn', 'ja', 'ko']);
+    translate.addLangs(['en', 'fa']);
     this.setLanguage();
   }
   setLanguage() {
@@ -25,10 +25,11 @@ export class BoostrapLoader extends BaseComponent{
     }
     else {
       const browserLang = this.translate.getBrowserLang();
-      currentLang = browserLang.match(/en|es|ar|ru|cn|ja|ko/) ? browserLang : 'en';
+      //currentLang = browserLang.match(/en|es|ar|ru|cn|ja|ko/) ? browserLang : 'en';
+      currentLang = browserLang.match(/en|fa/) ? browserLang : 'en';
       this.sub$.sink = this.translationService.setLanguage(currentLang).subscribe(() => { });
     }
-    if (currentLang == 'ar') {
+    if (currentLang == 'fa') {
       this.setDynamicStyleMain(`main-style`, currentLang)
       this.setDynamicStyleMain(`common-style`, currentLang);
       this.setDynamicStyleBootstrap(`boostrap-style`, currentLang);
@@ -67,7 +68,7 @@ export class BoostrapLoader extends BaseComponent{
     ) as HTMLLinkElement;
     if (themeLink) {
       if (lang) {
-        themeLink.href = styleName + "-ar.css";
+        themeLink.href = styleName + "-fa.css";
       } else {
         themeLink.href = styleName + ".css";
       }
@@ -76,7 +77,7 @@ export class BoostrapLoader extends BaseComponent{
       const style = this.document.createElement('link');
       style.id = `${styleName}`;
       style.rel = 'stylesheet';
-      style.href = lang ? `${styleName}-ar.css` : `${styleName}.css`;
+      style.href = lang ? `${styleName}-fa.css` : `${styleName}.css`;
       head.appendChild(style);
     }
   }
