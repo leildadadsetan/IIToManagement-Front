@@ -2,11 +2,11 @@
 
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "/src/assets/styles/color.scss";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/regular";
-@import "~perfect-scrollbar/css/perfect-scrollbar.css";
-@import "~ng-pick-datetime-ex/assets/style/picker.min.css";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "perfect-scrollbar/css/perfect-scrollbar.css";
+@import "ng-pick-datetime-ex/assets/style/picker.min.css";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import "/src/assets/styles/spinner.scss";
 body {
