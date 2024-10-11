@@ -245,6 +245,7 @@
   "USER_CREATED_SUCCESSFULLY": "کاربر با موفقیت ایجاد شد",
   "EDIT_USER": "ویرایش کاربر",
   "ROLES": "نقش‌ها",
+  "ACTIONS":"دسترسی ها",
   "SUCCESSFULLY_CHANGED_PASSWORD": "رمز عبور با موفقیت تغییر یافت",
   "CURRENT_PASSWORD": "رمز عبور فعلی",
   "CURRENT_PASSWORD_IS_REQUIRED": "رمز عبور فعلی لازم است",
