@@ -647,5 +647,8 @@
   "TOTAL_SALES_TAX":"Total Sales Tax",
   "TOTAL_DISCOUNT_ON_SALES":"Total Discount on Sales",
   "SALES_DUE":"Sales Due",
-  "PURCHASE":"Purchase"
+  "PURCHASE":"Purchase",
+  "USER_GROUP":"User Group",
+  "LIST_USER_GROUPS"
+
 }

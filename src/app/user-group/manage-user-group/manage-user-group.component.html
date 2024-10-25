@@ -1,0 +1,44 @@
+<div class="page-header-main">
+  <div class="row align-items-center justify-content-between">
+    <div class="col-md-auto col-sm-auto">
+      <div class="content-header">
+        <h1 *ngIf="!isEditMode">{{'ADD_USER_GROUP' | translate}}</h1>
+        <h1 *ngIf="isEditMode">{{'EDIT_USER_GROUP' | translate}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="userGroupForm">
+  <div class="row">
+    <div class="col-md-9">
+      <div class="form-row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="text-danger">{{'GROUP_NAME' | translate}}*</label>
+            <input formControlName="groupName" class="form-control" type="text">
+            <div *ngIf="userGroupForm.get('groupName').touched && userGroupForm.get('groupName').errors">
+              <div class="text-danger" *ngIf="userGroupForm.get('groupName').errors?.required">
+                {{'GROUP_NAME_IS_REQUIRED' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group col-md-3 status-switch mt-8">
+            <mat-slide-toggle formControlName="isActive">
+              <span *ngIf="userGroupForm.get('isActive').value">{{'ACTIVE' | translate}}</span>
+              <span *ngIf="!userGroupForm.get('isActive').value">{{'INACTIVE' | translate}}</span>
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-top-10 col-md-12">
+      <button class="btn btn-success btn-sm m-right-10" (click)="saveUserGroup()"><i class="fas fa-save"></i> {{'SAVE' | translate}}</button>
+      <button type="button" class="btn btn-danger btn-sm" [routerLink]="['/user-groups']"><i class="fas fa-times-circle"></i> {{'CANCEL' | translate}}</button>
+    </div>
+  </div>
+</form>
