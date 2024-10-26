@@ -21,6 +21,7 @@ export class UserGroupService {
   }
 
   addUserGroup(userGroup: UserGroup): Observable<UserGroup | CommonError> {
+    debugger;
     const url = `user-group`;
     return this.httpClient.post<UserGroup>(url, userGroup)
       .pipe(catchError(this.commonHttpErrorService.handleError));

@@ -334,6 +334,13 @@ const routes: Routes = [
             import('./reports/product-warehouse-report/product-warehouse-report.module').then(
               m => m.ProductWarehouseReportModule
             )
+        },
+        {
+          path: 'user-groups',
+          canLoad: [AuthGuard],
+          loadChildren: () =>
+            import('./user-group/user-group.module')
+              .then(m => m.UserGroupModule)
         }, {
           path: '**',
           redirectTo: '/'

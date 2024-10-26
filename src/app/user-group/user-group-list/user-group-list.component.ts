@@ -24,7 +24,7 @@ import { UserGroup } from '@core/domain-classes/user-group';
 export class UserGroupListComponent extends BaseComponent implements OnInit, AfterViewInit {
   dataSource: UserGroupDataSource;
   users: User[] = [];
-  displayedColumns: string[] = ['name',  'isActive'];
+  displayedColumns: string[] = ['groupName',  'isActive'];
   footerToDisplayed = ['footer'];
   isLoadingResults = true;
   userGroupResource: UserGroupResource;
@@ -44,7 +44,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit, Aft
     this.getLangDir();
     this.userGroupResource = new UserGroupResource();
     this.userGroupResource.pageSize = 10;
-    this.userGroupResource.orderBy = 'name'
+    this.userGroupResource.orderBy = 'groupName'
   }
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit, Aft
 
   deleteUser(usergroup: UserGroup) {
     this.sub$.sink = this.commonDialogService
-      .deleteConformationDialog(`${this.translationService.getValue('ARE_YOU_SURE_YOU_WANT_TO_DELETE')} ${usergroup.name}`)
+      .deleteConformationDialog(`${this.translationService.getValue('ARE_YOU_SURE_YOU_WANT_TO_DELETE')} ${usergroup.groupName}`)
       .subscribe((isTrue: boolean) => {
         if (isTrue) {
           this.sub$.sink = this.userGroupService.deleteUserGroup(usergroup.id)

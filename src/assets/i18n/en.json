@@ -649,6 +649,6 @@
   "SALES_DUE":"Sales Due",
   "PURCHASE":"Purchase",
   "USER_GROUP":"User Group",
-  "LIST_USER_GROUPS"
-
+  "USER_GROUPs":"User Groups",
+  "ADD_USER_GROUP":"Add user Group"
 }

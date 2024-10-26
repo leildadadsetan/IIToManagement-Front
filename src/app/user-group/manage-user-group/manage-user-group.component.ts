@@ -73,7 +73,7 @@ export class ManageUserGroupComponent extends BaseComponent implements OnInit {
     const formValue = this.userGroupForm.value;
     const userGroup: UserGroup = {
       id: formValue.id,
-      name: formValue.name,
+      groupName: formValue.groupName,
       isActive: formValue.isActive
     };
     return userGroup;
