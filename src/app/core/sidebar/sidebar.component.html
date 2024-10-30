@@ -126,7 +126,7 @@
           </li>
         </ul>
 
-        <!-- <li id="PORHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#POR"
+        <li id="PORHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#POR"
           class="collapsed" *hasClaim="['POR_VIEW_PO_REQUESTS','POR_ADD_PO_REQUEST']">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'purchase-order-request'}">
             <i class="nav-icon  fas fa-bookmark"></i>
@@ -150,8 +150,8 @@
               <p>{{'ADD_NEW' | translate}}</p>
             </a>
           </li>
-        </ul> -->
-        <!-- <li id="POHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#PO"
+        </ul> 
+         <li id="POHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#PO"
           class="collapsed" *hasClaim="['PO_VIEW_PURCHASE_ORDERS','PO_ADD_PO']">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'purchase-order'}">
             <i class="nav-icon fas fa-cart-plus"></i>
@@ -175,8 +175,8 @@
               <p>{{'ADD_NEW' | translate}}</p>
             </a>
           </li>
-        </ul> -->
-        <!-- <li id="POREHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#PORE"
+        </ul>
+        <li id="POREHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse" data-target="#PORE"
           class="collapsed" *hasClaim="['PO_RETURN_PO']">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'purchase-order-return'}">
             <i class="nav-icon fas fa-cart-plus"></i>
@@ -225,9 +225,9 @@
               <p>{{'ADD_NEW' | translate}}</p>
             </a>
           </li>
-        </ul> -->
+        </ul> 
 
-        <!-- <li id="SalesReHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
+        <li id="SalesReHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
           data-target="#SalesReturn" class="collapsed" *hasClaim="['SO_RETURN_SO']">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'sales-order-return'}">
             <i class="nav-icon  fas fa-cart-arrow-down"></i>
@@ -251,7 +251,7 @@
               <p>{{'ADD_NEW' | translate}}</p>
             </a>
           </li>
-        </ul> -->
+        </ul>
 
 
         <li *hasClaim="['INVE_VIEW_INVENTORIES']" class="nav-item">
@@ -261,7 +261,7 @@
             <p>{{'INVENTORY' | translate}}</p>
           </a>
         </li>
-        <!-- <li id="ExpenseHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
+        <li id="ExpenseHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
           data-target="#Expense" class="collapsed"
           *hasClaim="['EXP_VIEW_EXPENSES','EXP_ADD_EXPENSE','EXP_MANAGE_EXP_CATEGORY']">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'expense'}">
@@ -299,7 +299,7 @@
               </p>
             </a>
           </li>
-        </ul> -->
+        </ul> 
         <li id="ReportsHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
           data-target="#Reports" class="collapsed" *hasClaim="['REP_PO_REP','REP_SO_REP','REP_PO_PAYMENT_REP','REP_EXPENSE_REP','REP_SO_PAYMENT_REP','REP_SALES_VS_PURCHASE_REP',
           'REP_PRO_PP_REP','REP_PRO_SO_REPORT','REP_STOCK_REPORT','REP_SUP_PAYMENT_REP','REP_CUST_PAYMENT_REP','REP_VIEW_PRO_LOSS_REP']">
@@ -438,6 +438,13 @@
             </a>
           </li>
         </ul>
+        <li *hasClaim="['USR_MANAGE_GROUP']" data-toggle="collapse" data-target="#Group">
+          <a [routerLink]="['/group']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+            class="nav-link">
+            <i class="far fa-list-alt nav-icon"></i>
+            <p>{{'GROUP' | translate}}</p>
+          </a>
+        </li>
           <!-- User Group (New Section) -->
           <li id="UserGroupHeading" aria-expanded="true" aria-controls="collapseOne"
           *hasClaim="['USR_VIEW_USERGROUPS','UG_ADD_UG']" data-toggle="collapse" data-target="#UserGroup"
@@ -465,7 +472,7 @@
             </a>
           </li>
         </ul>
-        <!-- <li id="InquiryHeading" aria-expanded="true" aria-controls="collapseOne"
+       <li id="InquiryHeading" aria-expanded="true" aria-controls="collapseOne"
           *hasClaim="['INQ_VIEW_INQUIRIES','INQ_ADD_INQUIRY']" data-toggle="collapse" data-target="#Inquiry"
           class="collapsed">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'inquiry'}">
@@ -504,8 +511,8 @@
               <p>{{'INQUIRY_SOURCES' | translate}}</p>
             </a>
           </li>
-        </ul> -->
-        <!-- <li id="ReminderHeading" aria-expanded="true" aria-controls="collapseOne"
+        </ul> 
+        <li id="ReminderHeading" aria-expanded="true" aria-controls="collapseOne"
           *hasClaim="['REM_VIEW_REMINDERS','REM_ADD_REMINDER']" data-toggle="collapse" data-target="#Reminder"
           class="collapsed">
           <a class="nav-link" [ngClass]="{'active': currentUrl == 'reminders'}">
@@ -534,7 +541,7 @@
               </p>
             </a>
           </li>
-        </ul> -->
+        </ul> 
         <li class="nav-item">
           <a [routerLink]="['/notifications']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
             class="nav-link">
