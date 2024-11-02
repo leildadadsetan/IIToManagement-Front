@@ -5,34 +5,34 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Customer } from '@core/domain-classes/customer';
+import { Group } from '@core/domain-classes/group';
 import { Observable, of } from 'rxjs';
 import { take, mergeMap } from 'rxjs/operators';
 
-import { CustomerService } from '../customer.service';
+import { GroupService } from '../group.service';
 
 @Injectable()
-export class CustomerResolverService implements Resolve<Customer> {
+export class GroupResolverService implements Resolve<Group> {
   constructor(
-    private customerService: CustomerService,
+    private groupService: GroupService,
     private router: Router
   ) {}
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<Customer> | null {
-    debugger;
+  ): Observable<Group> | null {
     const id = route.paramMap.get('id');
     if (id === 'addItem') {
+      debugger;
       return null;
     }
-    return this.customerService.getCustomer(id).pipe(
+    return this.groupService.getGroup(id).pipe(
       take(1),
-      mergeMap((customer) => {
-        if (customer) {
-          return of(customer);
+      mergeMap((group) => {
+        if (group) {
+          return of(group);
         } else {
-          this.router.navigate(['/customer']);
+          this.router.navigate(['/group']);
           return null;
         }
       })

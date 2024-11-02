@@ -438,40 +438,33 @@
             </a>
           </li>
         </ul>
-        <li *hasClaim="['USR_MANAGE_GROUP']" data-toggle="collapse" data-target="#Group">
+        <li id="GroupHeading" aria-expanded="true" aria-controls="collapseOne"
+        *hasClaim="['GR_VIEW_USERGROUPS','GR_ADD_GROUP']" data-toggle="collapse" data-target="#Group"
+        class="collapsed">
+        <a class="nav-link" [ngClass]="{'active': currentUrl == 'group'}">
+          <i class="nav-icon fas fa-users-cog"></i>
+          <span>{{'USER_GROUP' | translate}}</span>
+          <span class="fas fa-angle-down rotate-arrow ml-auto"></span>
+        </a>
+      </li>
+      <ul class="sub-menu collapse" id="Group" [ngClass]="{'show': currentUrl == 'group'}"
+        aria-labelledby="GroupHeading" data-parent="#accordionExample">
+        <li *hasClaim="'GR_VIEW_USERGROUPS'" class="nav-item">
           <a [routerLink]="['/group']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
             class="nav-link">
             <i class="far fa-list-alt nav-icon"></i>
-            <p>{{'GROUP' | translate}}</p>
+            <p>{{'LIST' | translate}}</p>
           </a>
         </li>
-          <!-- User Group (New Section) -->
-          <li id="UserGroupHeading" aria-expanded="true" aria-controls="collapseOne"
-          *hasClaim="['USR_VIEW_USERGROUPS','UG_ADD_UG']" data-toggle="collapse" data-target="#UserGroup"
-          class="collapsed">
-          <a class="nav-link" [ngClass]="{'active': currentUrl == 'usergroup'}">
-            <i class="nav-icon fas fa-users"></i>
-            <span>{{'USER_GROUP' | translate}}</span>
-            <span class="fas fa-angle-down rotate-arrow ml-auto"></span>
+        <li *hasClaim="'GR_ADD_GROUP'" class="nav-item">
+          <a [routerLink]="['/group/addItem']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+            class="nav-link">
+            <i class="fas fa-plus-square nav-icon"></i>
+            <p>{{'ADD_NEW' | translate}}</p>
           </a>
         </li>
-        <ul class="sub-menu collapse" [ngClass]="{'show': currentUrl == 'usergroup'}" id="UserGroup"
-          aria-labelledby="UserGroupHeading" data-parent="#accordionExample">
-          <li *hasClaim="'UG_VIEW_UG'" class="nav-item">
-            <a [routerLink]="['/user-groups']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
-              class="nav-link">
-              <i class="far fa-list-alt nav-icon"></i>
-              <p>{{'LIST' | translate}}</p>
-            </a>
-          </li>
-          <li *hasClaim="'UG_ADD_UG'" class="nav-item">
-            <a [routerLink]="['/user-groups/manage']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
-              class="nav-link">
-              <i class="fas fa-plus-square nav-icon"></i>
-              <p>{{'ADD_NEW' | translate}}</p>
-            </a>
-          </li>
-        </ul>
+      </ul>
+      
        <li id="InquiryHeading" aria-expanded="true" aria-controls="collapseOne"
           *hasClaim="['INQ_VIEW_INQUIRIES','INQ_ADD_INQUIRY']" data-toggle="collapse" data-target="#Inquiry"
           class="collapsed">

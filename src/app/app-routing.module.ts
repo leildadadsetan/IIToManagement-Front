@@ -336,19 +336,11 @@ const routes: Routes = [
             )
         },
         {
-          path: 'user-groups',
+          path: 'group',
           canLoad: [AuthGuard],
           loadChildren: () =>
-            import('./user-group/user-group.module')
-              .then(m => m.UserGroupModule)
-        },
-        {
-          path: 'group',
-          loadChildren: () =>
-            import('./group/group.module').then(
-              m => m.GroupModule
-            )
-        
+            import('./group/group.module')
+              .then(m => m.GroupModule)
         },
          {
           path: '**',

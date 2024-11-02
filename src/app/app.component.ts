@@ -158,7 +158,11 @@ export class AppComponent extends BaseComponent implements OnInit {
           event.url.indexOf('logs') > -1
         ) {
           this.commonService.setCurrentUrl('logs');
-        } else {
+        }
+         else if (event.url.indexOf('group') > -1) {  
+        this.commonService.setCurrentUrl('group');
+         }
+        else {
           this.commonService.setCurrentUrl('');
         }
       });
