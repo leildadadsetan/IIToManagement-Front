@@ -655,5 +655,7 @@
   "ADD_GROUP": "Add User Group",
   "MANAGE_GROUP":"Manage Group",
   "GROUP_NAME":"Group Name",
-  "GROUP_NAME_IS_REQUIRED":"Group Name Is Required"
+  "GROUP_NAME_IS_REQUIRED":"Group Name Is Required",
+  "GROUP":"Group",
+  "GROUP_CATEGORY":"Group Category"
 }
