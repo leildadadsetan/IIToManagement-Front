@@ -73,8 +73,7 @@ export class GroupDetailComponent extends BaseComponent implements OnInit {
 
   patchGroup() {
     this.groupForm.patchValue({
-      groupName: this.group.groupName,
-      description: this.group.description,
+      groupName: this.group.groupName
     });
   }
 
@@ -85,32 +84,7 @@ export class GroupDetailComponent extends BaseComponent implements OnInit {
     });
   }
 
-
-
-
-
-  onGroupSubmit() {
-    if (this.groupForm.valid) {
-      const grObj = this.createBuildForm();
-      if (this.group) {
-        this.sub$.sink = this.groupService
-          .updateGroup(this.group.id, grObj)
-          .subscribe(c => {
-            this.toastrService.success(this.translationService.getValue('GROUP_UPDATE_SUCCESSFULLY'));
-            this.router.navigate(['/group']);
-          });
-      } else {
-        this.sub$.sink = this.groupService
-          .saveGroup(grObj)
-          .subscribe(c => {
-            this.toastrService.success(this.translationService.getValue('GROUP_SAVE_SUCCESSFULLY'));
-            this.router.navigate(['/group']);
-          });
-      }
-    } else {
-      this.markFormGroupTouched(this.groupForm);
-    }
-  }
+ 
 
   private markFormGroupTouched(formGroup: UntypedFormGroup) {
     (<any>Object).values(formGroup.controls).forEach((control) => {
@@ -125,8 +99,7 @@ export class GroupDetailComponent extends BaseComponent implements OnInit {
   createBuildForm(): Group {
     const groupObj: Group = {
       id: this.group ? this.group.id : null,
-      groupName: this.groupForm.get('groupName').value,
-      description: this.groupForm.get('description').value
+      groupName: this.groupForm.get('groupName').value
     };
     return groupObj;
   }

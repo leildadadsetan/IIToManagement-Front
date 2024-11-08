@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpResponse, HttpClient, HttpParams } from '@angular/common/http';
-import { Guid } from 'guid-typescript';
 import { GroupResourceParameter } from '@core/domain-classes/group-resource-parameter';
 import { Group } from '@core/domain-classes/group';
-import { GroupList } from '@core/domain-classes/group-list';
+import { catchError } from 'rxjs/operators';
+import { CommonHttpErrorService } from '@core/error-handler/common-http-error.service';
+import { CommonError } from '@core/error-handler/common-error';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GroupService {
-  constructor(private http: HttpClient) {}
+  private readonly baseUrl = 'group';
 
-  getGroups(
-    resourceParams: GroupResourceParameter
-  ): Observable<HttpResponse<Group[]>> {
-    const url = 'group';
+  constructor(
+    private http: HttpClient,
+    private commonHttpErrorService: CommonHttpErrorService
+  ) {}
+
+  // Fetch all groups with resource parameters
+  getGroups(resourceParams: GroupResourceParameter): Observable<HttpResponse<Group[]> | CommonError> {
+    const url = `${this.baseUrl}`;
     const groupParams = new HttpParams()
       .set('fields', resourceParams.fields)
       .set('orderBy', resourceParams.orderBy)
@@ -23,41 +28,68 @@ export class GroupService {
       .set('skip', resourceParams.skip.toString())
       .set('searchQuery', resourceParams.searchQuery)
       .set('groupName', resourceParams.groupName)
+      .set('isActive', resourceParams.isActive);
+
     return this.http.get<Group[]>(url, {
       params: groupParams,
       observe: 'response',
-    });
+    }).pipe(
+      catchError(this.commonHttpErrorService.handleError)
+    );
   }
 
-  getGroupsForDropDown(
-    searchBy: string,
-    searchString: string
-  ): Observable<Group[]> {
-    const url = 'group/search';
-    if (searchString && searchBy) {
-      let params = `?searchQuery=${searchString.trim()}&searchBy=${searchBy}&pageSize=10`;
-      return this.http.get<Group[]>(url + params);
-    }
-    return of([]);
+  updateGroup(group: Group): Observable<Group | CommonError> {
+    const url = `role/${group.id}`;
+    return this.http.put<Group>(url, group)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  getGroup(id: string): Observable<Group> {
-    const url = 'group/' + id;
-    return this.http.get<Group>(url);
+  addGroup(group: Group): Observable<Group | CommonError> {
+    const url = `group`;
+    return this.http.post<Group>(url, group)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
 
-  deleteGroup(id: string): Observable<void> {
-    const url = 'group/' + id;
-    return this.http.delete<void>(url);
+  // Fetch a single group by ID
+  getGroup(id: string): Observable<Group | CommonError> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.get<Group>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
-  updateGroup(id: string, group: Group): Observable<Group> {
-    const url = 'group/' + id;
-    return this.http.put<Group>(url, group);
+
+  // Delete a group by ID
+  deleteGroup(id: string): Observable<void | CommonError> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete<void>(url)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
   }
-  saveGroup(group: Group): Observable<Group> {
-    const url = 'group';
-    return this.http.post<Group>(url, group);
-  }
+
  
+
+  // Create a new group
+  saveGroup(group: Group): Observable<Group | CommonError> {
+    const url = `${this.baseUrl}`;
+    return this.http.post<Group>(url, group)
+      .pipe(catchError(this.commonHttpErrorService.handleError));
+  }
+
+  // New method to fetch user groups, similar to getUsers in UserService
+  getUserGroups(resourceParams: GroupResourceParameter): Observable<HttpResponse<Group[]> | CommonError> {
+    debugger;
+    const url = `${this.baseUrl}/GetUserGroups`;
+    const groupParams = new HttpParams()
+      .set('fields', resourceParams.fields)
+      .set('orderBy', resourceParams.orderBy)
+      .set('pageSize', resourceParams.pageSize.toString())
+      .set('skip', resourceParams.skip.toString())
+      .set('searchQuery', resourceParams.searchQuery)
+      .set('groupName', resourceParams.groupName);
  
+    return this.http.get<Group[]>(url, {
+      params: groupParams,
+      observe: 'response',
+    }).pipe(
+      catchError(this.commonHttpErrorService.handleError)
+    );
+  }
 }

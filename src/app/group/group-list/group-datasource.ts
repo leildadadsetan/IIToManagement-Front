@@ -13,7 +13,7 @@ export class GroupDataSource implements DataSource<Group> {
   private loadingSubject$ = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject$.asObservable();
   private _count: number = 0;
-  sub$: Subscription;
+  private sub$: Subscription;
 
   public get count(): number {
     return this._count;
@@ -36,17 +36,27 @@ export class GroupDataSource implements DataSource<Group> {
 
   loadData(resource: GroupResourceParameter) {
     this.loadingSubject$.next(true);
-    this.sub$ = this.groupService.getGroups(resource)
+
+    // Unsubscribe from previous subscription to avoid memory leaks
+    this.sub$.unsubscribe();
+    this.sub$ = this.groupService.getUserGroups(resource)
       .pipe(
-        catchError(() => of([])),
-        finalize(() => this.loadingSubject$.next(false)))
+        catchError((error) => {
+          console.error('Error fetching user groups:', error);
+          return of([]); // Return an empty array on error
+        }),
+        finalize(() => this.loadingSubject$.next(false))
+      )
       .subscribe((resp: HttpResponse<Group[]>) => {
-        if (resp && resp.headers.get('X-Pagination')) {
-          const paginationParam = JSON.parse(
-            resp.headers.get('X-Pagination')
-          ) as ResponseHeader;
-          this._responseHeaderSubject$.next(paginationParam);
-          const entities = [...resp.body];
+        if (resp && resp.body) {
+          const paginationHeader = resp.headers.get('X-Pagination');
+          if (paginationHeader) {
+            const paginationParam = JSON.parse(paginationHeader) as ResponseHeader;
+            this._responseHeaderSubject$.next(paginationParam);
+          }
+
+          // Ensure resp.body is an array
+          const entities = Array.isArray(resp.body) ? resp.body : [];
           this._count = entities.length;
           this._entities$.next(entities);
         } else {

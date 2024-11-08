@@ -4,6 +4,8 @@ import { GroupListComponent } from './group-list/group-list.component';
 import { GroupDetailComponent } from './group-detail/group-detail.component';
 import { GroupResolverService } from './group-detail/group-detail-resolver.service';
 import { AuthGuard } from '@core/security/auth.guard';
+import { ManageGroupComponent } from './manage-group/manage-group.component';
+import { GroupDetailResolverService } from './group-detail.resolver';
 
 const routes: Routes = [
   {
@@ -13,14 +15,13 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: ':id',
-    component: GroupDetailComponent,
-    resolve: {
-      group: GroupResolverService
-    },
-    data: { claimType: ['GR_ADD_GROUP', 'GR_UPDATE_GROUP'] },
+    path: 'manage/:id',
+    component: ManageGroupComponent,
+    resolve: { group: GroupDetailResolverService },
+    data: { claimType: 'GR_UPDATE_GROUP' },
     canActivate: [AuthGuard]
-  }
+  },
+  
 ];
 
 @NgModule({

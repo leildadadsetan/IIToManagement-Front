@@ -2,5 +2,5 @@
 export interface Group {
   id: string;
   groupName: string;
-  description: string;
+  isActive?: boolean;
 }
