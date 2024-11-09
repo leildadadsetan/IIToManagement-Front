@@ -44,7 +44,7 @@ export class ManageGroupCategoryComponent extends BaseComponent implements OnIni
     this.dialogRef.close();
   }
 
-  saveExpenseCategory(): void {
+  saveGroupCategory(): void {
     if (!this.groupCategoryForm.valid) {
       this.groupCategoryForm.markAllAsTouched();
       return;

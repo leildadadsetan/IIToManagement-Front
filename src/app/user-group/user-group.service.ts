@@ -12,7 +12,7 @@ export class UserGroupService {
 
   getUserGroups(
     resourceParams: GroupResourceParameter
-  ): Observable<HttpResponse<Group[]>> {
+  ): Observable<HttpResponse<UserGroup[]>> {
     const url = 'group';
     const customParams = new HttpParams()
       .set('Fields', resourceParams.fields ? resourceParams.fields : '')

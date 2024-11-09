@@ -18,9 +18,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label class="text-danger" for="expenseCategoryName">{{'EXPENSE_CATEGORY_NAME' | translate}}
+                        <label class="text-danger" for="groupCategoryName">{{'EXPENSE_CATEGORY_NAME' | translate}}
                             *</label>
-                        <input formControlName="name" type="text" class="form-control" id="expenseCategoryName">
+                        <input formControlName="name" type="text" class="form-control" id="groupCategoryName">
                         <div *ngIf="groupCategoryForm.get('name').touched && groupCategoryForm.get('name').errors">
                             <div class="text-danger"
                                 *ngIf="groupCategoryForm.get('name').touched && groupCategoryForm.get('name').errors?.required">
