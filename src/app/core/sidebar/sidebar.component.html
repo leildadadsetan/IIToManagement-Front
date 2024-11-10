@@ -441,16 +441,16 @@
         <li id="GroupHeading" aria-expanded="true" aria-controls="collapseOne" data-toggle="collapse"
         data-target="#Group" class="collapsed"
         *hasClaim="['GR_VIEW_USERGROUPS','GR_ADD_GROUP','GR_MANAGE_GROUPS']">
-        <a class="nav-link" [ngClass]="{'active': currentUrl == 'user-category'}">
+        <a class="nav-link" [ngClass]="{'active': currentUrl == 'group'}">
           <i class="fas fa-solid fa-wallet nav-icon"></i>
           <span>{{'GROUP' | translate}}</span>
           <span class="fas fa-angle-down rotate-arrow ml-auto"></span>
         </a>
       </li>
-      <ul class="sub-menu collapse" id="Group" [ngClass]="{'show': currentUrl == 'user-group'}"
+      <ul class="sub-menu collapse" id="Group" [ngClass]="{'show': currentUrl == 'group'}"
         aria-labelledby="GroupHeading" data-parent="#accordionExample">
         <li class="nav-item" *hasClaim="'GR_VIEW_USERGROUPS'">
-          <a [routerLink]="['/user-group']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+          <a [routerLink]="['/group']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
             class="nav-link">
             <i class="far fa-list-alt nav-icon"></i>
             <p>
@@ -468,7 +468,7 @@
           </a>
         </li>
         <li class="nav-item" *hasClaim="'GR_MANAGE_GROUPS'">
-          <a [routerLink]="['/group-category']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
+          <a [routerLink]="['/group']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"
             class="nav-link">
             <i class="far fa-list-alt nav-icon"></i>
             <p>

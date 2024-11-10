@@ -31,7 +31,7 @@ export class UserGroupResolverService implements Resolve<Group> {
                 if (group) {
                     return of(group);
                 } else {
-                    this.router.navigate(['/user-group']);
+                    this.router.navigate(['/group']);
                     return null;
                 }
             })
