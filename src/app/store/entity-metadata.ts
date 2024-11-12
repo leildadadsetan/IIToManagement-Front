@@ -55,7 +55,8 @@ const pluralNames = {
   Brand: "Brands",
   Warehouse:"Warehouses",
   Country:"Countries",
-  City:"Cities"
+  City:"Cities",
+  Group:"Groups"
 };
 
 export const entityConfig = {
