@@ -3,10 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Group } from '@core/domain-classes/group';
-import { GroupCategory } from '@core/domain-classes/group-category';
 import { User } from '@core/domain-classes/user';
 import { UserResource } from '@core/domain-classes/user-resource';
-import { GroupCategoryService } from '@core/services/group-category.service';
+import { GroupService } from '@core/services/group.service';
 import { TranslationService } from '@core/services/translation.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseComponent } from 'src/app/base.component';
@@ -21,16 +20,16 @@ import { UserGroupService } from '../user-group.service';
 export class ManageUserGroupComponent extends BaseComponent implements OnInit {
   groupForm: UntypedFormGroup;
   users: User[] = [];
-  groupCategories: GroupCategory[] = [];
+  groups: Group[] = [];
   isLoading = false;
   isReceiptDeleted = false;
 
  
   constructor(private router: Router,
     private fb: UntypedFormBuilder,
-    private groupCategoryService: GroupCategoryService,
+    private groupervice: GroupService,
     private userService: UserService,
-    private groupService: UserGroupService,
+    private groupService: GroupService,
     private toastrService: ToastrService,
     public translationService: TranslationService,
     private activatedRoute: ActivatedRoute) { 
@@ -40,7 +39,7 @@ export class ManageUserGroupComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.createGroupForm();
-    this.getGroupCategories();
+    this.getGroups();
     this.getUsers();
     this.activatedRoute.data.subscribe((data: { group: Group }) => {
       this.groupForm.patchValue(data.group);
@@ -57,9 +56,9 @@ export class ManageUserGroupComponent extends BaseComponent implements OnInit {
       });
   }
 
-  getGroupCategories() {
-    this.groupCategoryService.getAll().subscribe(categories => {
-      this.groupCategories = categories;
+  getGroups() {
+    this.groupService.getAll().subscribe(categories => {
+      this.groups = categories;
     })
   }
 

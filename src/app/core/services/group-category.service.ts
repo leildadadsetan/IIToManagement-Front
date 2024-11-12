@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { GroupCategory } from '@core/domain-classes/group-category';
+import { Group } from '@core/domain-classes/group';
 import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from '@ngrx/data';
 
 @Injectable({providedIn: 'root'})
-export class GroupCategoryService extends EntityCollectionServiceBase<GroupCategory>  {
+export class GroupService extends EntityCollectionServiceBase<Group>  {
 
   constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-      super('GroupCategory', serviceElementsFactory);
+      super('Group', serviceElementsFactory);
   }
 
 }

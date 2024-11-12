@@ -1,24 +1,24 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GroupCategory } from '@core/domain-classes/group-category';
-import { GroupCategoryService } from '@core/services/group-category.service';
+import { Group} from '@core/domain-classes/group';
+import { GroupService } from '@core/services/group.service';
 import { TranslationService } from '@core/services/translation.service';
 import { ToastrService } from 'ngx-toastr';
 import { BaseComponent } from 'src/app/base.component';
 
 @Component({
-  selector: 'app-manage-group-category',
-  templateUrl: './manage-group-category.component.html',
-  styleUrls: ['./manage-group-category.component.scss']
+  selector: 'app-manage-group',
+  templateUrl: './manage-group.component.html',
+  styleUrls: ['./manage-group.component.scss']
 })
-export class ManageGroupCategoryComponent extends BaseComponent implements OnInit {
+export class ManageGroupComponent extends BaseComponent implements OnInit {
   isEdit: boolean = false;
-  groupCategoryForm: UntypedFormGroup;
+  groupForm: UntypedFormGroup;
   constructor(
-    public dialogRef: MatDialogRef<ManageGroupCategoryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: GroupCategory,
-    private groupCategoryService: GroupCategoryService,
+    public dialogRef: MatDialogRef<ManageGroupComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Group,
+    private groupService: GroupService,
     private toastrService: ToastrService,
     private fb: UntypedFormBuilder,
     public translationService: TranslationService) {
@@ -28,13 +28,13 @@ export class ManageGroupCategoryComponent extends BaseComponent implements OnIni
   ngOnInit(): void {
     this.createForm();
     if (this.data.id) {
-      this.groupCategoryForm.patchValue(this.data);
+      this.groupForm.patchValue(this.data);
       this.isEdit = true;
     }
   }
 
   createForm() {
-    this.groupCategoryForm = this.fb.group({
+    this.groupForm = this.fb.group({
       id: [''],
       name: ['', Validators.required]
     });
@@ -44,20 +44,20 @@ export class ManageGroupCategoryComponent extends BaseComponent implements OnIni
     this.dialogRef.close();
   }
 
-  saveGroupCategory(): void {
-    if (!this.groupCategoryForm.valid) {
-      this.groupCategoryForm.markAllAsTouched();
+  saveGroup(): void {
+    if (!this.groupForm.valid) {
+      this.groupForm.markAllAsTouched();
       return;
     }
-    const groupCategory: GroupCategory = this.groupCategoryForm.value;
+    const group: Group = this.groupForm.value;
 
     if (this.data.id) {
-      this.groupCategoryService.update(groupCategory).subscribe(() => {
+      this.groupService.update(group).subscribe(() => {
         this.toastrService.success(this.translationService.getValue('GROUP_UPDATED_SUCCESSFULLY'));
         this.dialogRef.close();
       });
     } else {
-      this.groupCategoryService.add(groupCategory).subscribe(() => {
+      this.groupService.add(group).subscribe(() => {
         this.toastrService.success(this.translationService.getValue('GROUP_SAVED_SUCCESSFULLY'));
         this.dialogRef.close();
       });

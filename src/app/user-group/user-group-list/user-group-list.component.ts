@@ -6,12 +6,11 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { CommonDialogService } from '@core/common-dialog/common-dialog.service';
 import { Group } from '@core/domain-classes/group';
-import { GroupCategory } from '@core/domain-classes/group-category';
 import { GroupResourceParameter } from '@core/domain-classes/group-resource-parameter';
 import { ResponseHeader } from '@core/domain-classes/response-header';
 import { User } from '@core/domain-classes/user';
 import { UserResource } from '@core/domain-classes/user-resource';
-import { GroupCategoryService } from '@core/services/group-category.service';
+import { GroupService } from '@core/services/group.service';
 import { TranslationService } from '@core/services/translation.service';
 import { ToastrService } from 'ngx-toastr';
 import { merge, Observable, Subject } from 'rxjs';
@@ -40,7 +39,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit {
   _categoryFilter: string;
   _userFilter: string;
   users: User[] = [];
-  groupCategories: GroupCategory[] = [];
+  groupps: Group[] = [];
 
   public filterObservable$: Subject<string> = new Subject<string>();
 
@@ -54,7 +53,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit {
     private commonDialogService: CommonDialogService,
     private router: Router,
     public translationService: TranslationService,
-    private groupCategoryService: GroupCategoryService,
+    private groupService: GroupService,
     private userService: UserService) {
     super(translationService);
     this.getLangDir();
@@ -67,7 +66,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit {
     this.dataSource = new UserGroupDataSource(this.userGroupService);
     this.dataSource.loadData(this.userGroupResource);
     this.getResourceParameter();
-    this.getGroupCategories();
+    this.getGroups();
     this.getUsers();
     this.sub$.sink = this.filterObservable$
       .pipe(
@@ -98,9 +97,9 @@ export class UserGroupListComponent extends BaseComponent implements OnInit {
       .subscribe();
   }
 
-  getGroupCategories() {
-    this.groupCategoryService.getAll().subscribe(categories => {
-      this.groupCategories = categories;
+  getGroups() {
+    this.groupService.getAll().subscribe(categories => {
+      this.groups = categories;
     })
   }
 

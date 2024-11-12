@@ -22,7 +22,7 @@ export class ExpenseCategoryListComponent extends BaseComponent implements OnIni
     super(translationService);
   }
   ngOnInit(): void {
-
+debugger;
     this.loading$ = this.expenseCategoryService.loaded$
       .pipe(
         tap(loaded => {

@@ -45,6 +45,7 @@ export class ManageExpenseCategoryComponent extends BaseComponent implements OnI
   }
 
   saveExpenseCategory(): void {
+    debugger;
     if (!this.expenseCategoryForm.valid) {
       this.expenseCategoryForm.markAllAsTouched();
       return;

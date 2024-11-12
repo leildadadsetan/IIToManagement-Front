@@ -172,6 +172,7 @@ export class ExpenseReportComponent extends BaseComponent implements OnInit {
   }
 
   getExpenseCategories() {
+    debugger;
     this.expenseCategoryService.getAll().subscribe(categories => {
       this.expenseCategories = categories;
     })
