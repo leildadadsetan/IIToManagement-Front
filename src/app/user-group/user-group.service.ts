@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpParams, HttpClient, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GroupResourceParameter } from '@core/domain-classes/group-resource-parameter';
-import { Group } from '@core/domain-classes/group';
+ import { UserGroup } from '@core/domain-classes/user-group';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class UserGroupService {
 
   getUserGroups(
     resourceParams: GroupResourceParameter
-  ): Observable<HttpResponse<Group[]>> {
+  ): Observable<HttpResponse<UserGroup[]>> {
     const url = 'group';
     const customParams = new HttpParams()
       .set('Fields', resourceParams.fields ? resourceParams.fields : '')
@@ -20,16 +20,16 @@ export class UserGroupService {
       .set('PageSize', resourceParams.pageSize.toString())
       .set('Skip', resourceParams.skip.toString())
       .set('SearchQuery', resourceParams.searchQuery ? resourceParams.searchQuery : '')
-        return this.httpClient.get<Group[]>(url, {
+        return this.httpClient.get<UserGroup[]>(url, {
       params: customParams,
       observe: 'response',
     });
   }
 
   
-  getUserGroup(id: string): Observable<Group> {
+  getUserGroup(id: string): Observable<UserGroup> {
     const url = 'group/' + id;
-    return this.httpClient.get<Group>(url);
+    return this.httpClient.get<UserGroup>(url);
   }
 
   deleteUserGroup(id: string): Observable<void> {
@@ -37,8 +37,8 @@ export class UserGroupService {
     return this.httpClient.delete<void>(url);
   }
 
-  updateUserGroup(id: string, group: Group): Observable<Group> {
+  updateUserGroup(id: string, group: UserGroup): Observable<UserGroup> {
     const url = 'group/' + id;
-    return this.httpClient.put<Group>(url, group);
+    return this.httpClient.put<UserGroup>(url, group);
   }
 }

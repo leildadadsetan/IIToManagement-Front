@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { CommonDialogService } from '@core/common-dialog/common-dialog.service';
-import { Group } from '@core/domain-classes/group';
+import { UserGroup } from '@core/domain-classes/user-group';
 import { GroupCategory } from '@core/domain-classes/group-category';
 import { GroupResourceParameter } from '@core/domain-classes/group-resource-parameter';
 import { ResponseHeader } from '@core/domain-classes/response-header';
@@ -28,7 +28,7 @@ import { UserGroupDataSource } from './user-group-datasource';
 })
 export class UserGroupListComponent extends BaseComponent implements OnInit {
   dataSource: UserGroupDataSource;
-  groups: Group[] = [];
+  groups: UserGroup[] = [];
   displayedColumns: string[] = ['action', 'createdDate',  'groupCategoryId', 'createdBy'];
   footerToDisplayed = ['footer'];
   isLoadingResults = true;
@@ -114,7 +114,7 @@ export class UserGroupListComponent extends BaseComponent implements OnInit {
       });
   }
 
-  deleteUserGroup(userGroup: Group) {
+  deleteUserGroup(userGroup: UserGroup) {
     this.sub$.sink = this.commonDialogService
       .deleteConformationDialog(`${this.translationService.getValue('ARE_YOU_SURE_YOU_WANT_TO_DELETE')}?`)
       .subscribe((isTrue: boolean) => {

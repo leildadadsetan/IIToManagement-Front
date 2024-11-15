@@ -1,14 +1,14 @@
 import { DataSource } from '@angular/cdk/table';
 import { HttpResponse } from '@angular/common/http';
-import { Group } from '@core/domain-classes/group';
+import { UserGroup } from '@core/domain-classes/user-group';
 import { GroupResourceParameter } from '@core/domain-classes/group-resource-parameter';
 import { ResponseHeader } from '@core/domain-classes/response-header';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { UserGroupService } from '../user-group.service';
 
-export class UserGroupDataSource implements DataSource<Group> {
-  private _groupSubject$ = new BehaviorSubject<Group[]>([]);
+export class UserGroupDataSource implements DataSource<UserGroup> {
+  private _groupSubject$ = new BehaviorSubject<UserGroup[]>([]);
   private _responseHeaderSubject$ = new BehaviorSubject<ResponseHeader>(null);
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
@@ -24,7 +24,7 @@ export class UserGroupDataSource implements DataSource<Group> {
   constructor(private userGroupService: UserGroupService) {
   }
 
-  connect(): Observable<Group[]> {
+  connect(): Observable<UserGroup[]> {
     this.sub$ = new Subscription();
     return this._groupSubject$.asObservable();
   }
@@ -41,7 +41,7 @@ export class UserGroupDataSource implements DataSource<Group> {
       .pipe(
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false)))
-      .subscribe((resp: HttpResponse<Group[]>) => {
+      .subscribe((resp: HttpResponse<UserGroup[]>) => {
         const paginationParam = JSON.parse(
           resp.headers.get('X-Pagination')
         ) as ResponseHeader;

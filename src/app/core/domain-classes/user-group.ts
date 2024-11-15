@@ -1,7 +1,6 @@
-import { ExpenseCategory } from "./expense-category";
-import { User } from "./user";
+ 
 
-export class Expense {
+export class UserGroup {
     id: string;
     
     name:string;

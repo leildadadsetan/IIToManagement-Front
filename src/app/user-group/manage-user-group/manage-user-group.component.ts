@@ -2,7 +2,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Group } from '@core/domain-classes/group';
+import { UserGroup } from '@core/domain-classes/user-group';
 import { GroupCategory } from '@core/domain-classes/group-category';
 import { User } from '@core/domain-classes/user';
 import { UserResource } from '@core/domain-classes/user-resource';
@@ -42,7 +42,7 @@ export class ManageUserGroupComponent extends BaseComponent implements OnInit {
     this.createGroupForm();
     this.getGroupCategories();
     this.getUsers();
-    this.activatedRoute.data.subscribe((data: { group: Group }) => {
+    this.activatedRoute.data.subscribe((data: { group: UserGroup }) => {
       this.groupForm.patchValue(data.group);
     })
   }
