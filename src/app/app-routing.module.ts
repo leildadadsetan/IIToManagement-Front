@@ -179,14 +179,9 @@ const routes: Routes = [
             .then(m => m.ExpenseModule)
         },
         {
-          path: 'group-category',
-          loadChildren: () => import('./group-category/group-category.module')
-            .then(m => m.GroupCategoryModule)
-        },
-        {
-          path: 'user-group',
-          loadChildren: () => import('./user-group/user-group.module')
-            .then(m => m.UserGroupModule)
+          path: 'group',
+          loadChildren: () => import('./group/group.module')
+            .then(m => m.GroupModule)
         },
         {
           path: 'inquiry',

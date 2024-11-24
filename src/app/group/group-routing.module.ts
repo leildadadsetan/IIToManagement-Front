@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { GroupCategoryListComponent } from './group-category-list/group-category-list.component';
+import { GroupListComponent } from './group-list/group-list.component';
 import { AuthGuard } from '@core/security/auth.guard';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: GroupCategoryListComponent,
+    component: GroupListComponent,
     canActivate: [AuthGuard],
     data: { claimType: 'GR_MANAGE_GROUPS' },
   }
@@ -16,4 +16,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class GroupCategoryRoutingModule { }
+export class GroupRoutingModule { }

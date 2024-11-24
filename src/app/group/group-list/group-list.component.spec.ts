@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageUserGroupComponent } from './manage-user-group.component';
+import { GroupListComponent } from './group-list.component';
 
-describe('ManageUserGroupComponent', () => {
-  let component: ManageUserGroupComponent;
-  let fixture: ComponentFixture<ManageUserGroupComponent>;
+describe('GroupListComponent', () => {
+  let component: GroupListComponent;
+  let fixture: ComponentFixture<GroupListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ManageUserGroupComponent ]
+      declarations: [ GroupListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManageUserGroupComponent);
+    fixture = TestBed.createComponent(GroupListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
